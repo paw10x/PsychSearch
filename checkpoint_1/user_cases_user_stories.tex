@@ -1,4 +1,3 @@
-
 \documentclass[11pt,a4paper]{article}
 
 \usepackage[utf8]{inputenc}
@@ -20,9 +19,11 @@
 
 \newcommand{\naglowek}{
 \hline
+\textbf{ID} &
 \textbf{Jako...} &
 \textbf{Chcę...} &
-\textbf{Aby...} \\
+\textbf{Aby...} &
+\textbf{Moduł} \\
 \hline
 }
 
@@ -39,177 +40,322 @@
 \vspace{0.5cm}
 
 \section*{Aktorzy systemu}
-
+ 
 W ramach platformy PsychSearch zdefiniowano
-trzy główne role (aktorów) wchodzące
-w interakcję z systemem:
-
+trzy role wykonywane przez ludzi oraz jednego
+aktora systemowego:
+ 
 \begin{itemize}
-
+ 
 \item \textbf{Użytkownik} -
 osoba poszukująca wsparcia psychologicznego.
 Korzysta z aplikacji w celu znalezienia
 odpowiedniego specjalisty, przeglądania
 wolnych terminów oraz umawiania się
 na konsultacje.
-
+ 
 \item \textbf{Psycholog} -
-zweryfikowany specjalista świadczący
-usługi psychologiczne. Korzysta z systemu,
-aby zarządzać swoim profilem zawodowym,
-ustalać grafik dostępności oraz przyjmować
-lub odrzucać prośby o konsultacje
-od użytkowników.
-
+specjalista świadczący usługi psychologiczne.
+Zarządza swoim profilem zawodowym
+(specjalizacje, kwalifikacje) i grafikiem
+dostępności oraz przyjmuje lub odrzuca prośby
+o konsultacje. Jego profil jest widoczny
+dla użytkowników dopiero po weryfikacji
+przez administratora.
+ 
 \item \textbf{Administrator} -
 osoba odpowiedzialna za nadzór nad całą
-platformą. Dba o poprawne funkcjonowanie
-systemu, weryfikuje profile specjalistów,
-rozwiązuje problemy techniczne i pilnuje
-przestrzegania regulaminu.
-
+platformą. Weryfikuje profile specjalistów,
+zarządza kontami, rozwiązuje problemy
+techniczne i pilnuje przestrzegania regulaminu.
+ 
+\item \textbf{Serwer} -
+przechowuje dane, przekazuje prośby
+o konsultacje do właściwych psychologów,
+powiadamia użytkowników o zmianach statusu,
+pilnuje, aby ten sam termin nie został
+zarezerwowany dwukrotnie, oraz rejestruje
+problemy techniczne.
+ 
 \end{itemize}
-
+ 
 \vspace{0.5cm}
-
+ 
 \section*{User Stories}
-
-\begin{xltabular}{\textwidth}{|p{2.5cm}|Y|Y|}
-
+ 
+\small
+\begin{xltabular}{\textwidth}{|p{1.1cm}|p{2.2cm}|Y|Y|p{2.4cm}|}
+ 
 \naglowek
 \endfirsthead
-
+ 
 \naglowek
 \endhead
-
+ 
+W-01 &
+Użytkownik, Psycholog, Administrator &
+zalogować się i wylogować &
+uzyskać dostęp do swoich danych
+i funkcji odpowiednich dla mojej roli. &
+Konta \\
+ 
+\noalign{\hrule height 2pt}
+ 
+U-01 &
 Użytkownik &
 założyć konto w aplikacji PsychSearch &
-móc korzystać z funkcjonalności systemu. \\
+móc korzystać z funkcjonalności systemu. &
+Konta \\
 \hline
-
+ 
+U-02 &
 Użytkownik &
-przeglądać listę dostępnych psychologów &
-znaleźć odpowiedniego specjalistę. \\
+przeglądać listę zweryfikowanych psychologów &
+znaleźć odpowiedniego specjalistę. &
+Katalog \\
 \hline
-
+ 
+U-03 &
 Użytkownik &
 wyświetlić profil wybranego psychologa &
-zapoznać się z jego specjalizacjami. \\
+zapoznać się z jego specjalizacjami. &
+Katalog \\
 \hline
-
+ 
+U-04 &
 Użytkownik &
-sprawdzać dostępne terminy konsultacji &
-wybrać dogodny dla mnie termin. \\
+sprawdzać wolne terminy wybranego psychologa &
+wybrać dogodny dla mnie termin. &
+Katalog \\
 \hline
-
+ 
+U-05 &
 Użytkownik &
 wysłać prośbę o konsultację
 do wybranego psychologa &
-umówić się na wizytę. \\
+umówić się na wizytę. &
+Rezerwacje \\
 \hline
-
+ 
+U-06 &
 Użytkownik &
-sprawdzać status mojej konsultacji &
+sprawdzać status moich konsultacji &
 wiedzieć, czy została zaakceptowana,
-odrzucona lub oczekuje na decyzję. \\
+odrzucona lub oczekuje na decyzję. &
+Rezerwacje \\
 \hline
-
+ 
+U-07 &
 Użytkownik &
 otrzymywać powiadomienia o zmianach
 statusu konsultacji &
-być na bieżąco z decyzją psychologa. \\
+być na bieżąco z decyzją psychologa. &
+Powiadomienia \\
 \hline
-
+ 
+U-08 &
 Użytkownik &
-anulować wysłaną prośbę
-lub zaakceptowaną wizytę &
-móc zrezygnować z konsultacji. \\
-
+anulować wysłaną prośbę lub zaakceptowaną
+wizytę w dozwolonym czasie przed terminem &
+móc zrezygnować z konsultacji. &
+Rezerwacje \\
+ 
 \noalign{\hrule height 2pt}
-
-
+ 
+P-01 &
 Psycholog &
 założyć konto w aplikacji PsychSearch &
-móc oferować konsultacje użytkownikom. \\
+móc oferować konsultacje użytkownikom. &
+Konta \\
 \hline
-
+ 
+P-02 &
 Psycholog &
 dodawać i edytować swoje specjalizacje &
 użytkownicy mogli znaleźć mnie
-na podstawie swoich potrzeb. \\
+na podstawie swoich potrzeb. &
+Katalog \\
 \hline
-
+ 
+P-03 &
 Psycholog &
-dodawać, zmieniać i usuwać dostępne
-terminy konsultacji &
-dostosować harmonogram do mojej
-dyspozycyjności. \\
+podać swoje kwalifikacje zawodowe w profilu &
+administrator mógł zweryfikować mój profil. &
+Katalog \\
 \hline
-
+ 
+P-04 &
+Psycholog &
+sprawdzać status weryfikacji mojego profilu &
+wiedzieć, czy jestem widoczny
+dla użytkowników. &
+Katalog \\
+\hline
+ 
+P-05 &
+Psycholog &
+dodawać, zmieniać i usuwać wolne terminy
+konsultacji &
+dostosować harmonogram do mojej
+dyspozycyjności. &
+Katalog \\
+\hline
+ 
+P-06 &
 Psycholog &
 otrzymywać prośby o konsultacje
 od użytkowników &
-móc rozpatrywać nowe zgłoszenia. \\
+móc rozpatrywać nowe zgłoszenia. &
+Rezerwacje, Powiadomienia \\
 \hline
-
+ 
+P-07 &
 Psycholog &
-przeglądać otrzymane prośby
-o konsultacje &
-planować czas i korelować z innymi terminami.\\
+przeglądać otrzymane prośby o konsultacje &
+planować czas i korelować z innymi terminami. &
+Rezerwacje \\
 \hline
-
+ 
+P-08 &
 Psycholog &
-akceptować otrzymane prośby
-o konsultacje &
+akceptować otrzymane prośby o konsultacje &
 potwierdzać użytkownikom możliwość
-odbycia wizyty w wybranym terminie. \\
+odbycia wizyty w wybranym terminie. &
+Rezerwacje \\
 \hline
-
+ 
+P-09 &
 Psycholog &
-odrzucać otrzymane prośby
-o konsultacje &
+odrzucać otrzymane prośby o konsultacje &
 informować użytkowników o braku
-możliwości odbycia wizyty. \\
+możliwości odbycia wizyty. &
+Rezerwacje \\
 \hline
-
+ 
+P-10 &
 Psycholog &
 sprawdzać aktualne statusy konsultacji &
-mieć kontrolę nad zaplanowanymi
-wizytami. \\
-
+mieć kontrolę nad zaplanowanymi wizytami. &
+Rezerwacje \\
+ 
 \noalign{\hrule height 2pt}
-
+ 
+A-01 &
 Administrator &
-zarządzać kontami użytkowników
+przeglądać listę kont użytkowników
 i psychologów &
-zapewnić prawidłowe funkcjonowanie
-aplikacji. \\
+mieć przegląd nad kontami w systemie. &
+Administracja \\
 \hline
-
+ 
+A-02 &
 Administrator &
-weryfikować profile psychologów &
-zapewnić wiarygodność specjalistów
-dostępnych w systemie. \\
-\hline
-
-Administrator &
-diagnozować i rozwiązywać
-problemy techniczne &
-zapewnić prawidłowe działanie
-aplikacji. \\
-\hline
-
-Administrator &
-blokować konta użytkowników
-i psychologów naruszających regulamin &
+blokować konta naruszające regulamin &
 zapewnić bezpieczeństwo pozostałym
-użytkownikom systemu. \\
+użytkownikom systemu. &
+Administracja \\
 \hline
-
+ 
+A-03 &
+Administrator &
+odblokowywać zablokowane konta &
+przywrócić dostęp, gdy blokada
+przestaje być zasadna. &
+Administracja \\
+\hline
+ 
+A-04 &
+Administrator &
+przeglądać profile psychologów
+oczekujące na weryfikację &
+sprawdzić podane dane i kwalifikacje. &
+Administracja \\
+\hline
+ 
+A-05 &
+Administrator &
+zatwierdzać lub odrzucać profile psychologów &
+zapewnić wiarygodność specjalistów
+dostępnych w systemie. &
+Administracja, Katalog \\
+\hline
+ 
+A-06 &
+Administrator &
+przeglądać zarejestrowane problemy techniczne &
+zdiagnozować ich przyczynę. &
+Administracja \\
+\hline
+ 
+A-07 &
+Administrator &
+rozwiązywać problemy techniczne
+i opisywać rozwiązanie &
+zapewnić prawidłowe działanie aplikacji. &
+Administracja \\
+ 
+\noalign{\hrule height 2pt}
+ 
+S-01 &
+Serwer &
+przechowywać dane kont, profili,
+terminów i konsultacji &
+były dostępne pomiędzy sesjami. &
+Wszystkie \\
+\hline
+ 
+S-02 &
+Serwer &
+przekazywać prośby o konsultację
+do wskazanego psychologa &
+mógł je rozpatrzyć. &
+Rezerwacje \\
+\hline
+ 
+S-03 &
+Serwer &
+informować użytkowników o zmianach
+statusu konsultacji &
+byli na bieżąco z decyzją psychologa. &
+Powiadomienia \\
+\hline
+ 
+S-04 &
+Serwer &
+odrzucić rezerwację terminu,
+który został już zajęty &
+dwie osoby nie zarezerwowały
+tego samego terminu. &
+Katalog \\
+\hline
+ 
+S-05 &
+Serwer &
+rejestrować problemy techniczne &
+administrator mógł je zdiagnozować. &
+Administracja \\
+\hline
+ 
+S-06 &
+Serwer &
+sprawdzać sesję i uprawnienia
+wywołującego każdą operację &
+tylko uprawnione role miały dostęp
+do danych i funkcji. &
+Konta \\
+\hline
+ 
+S-07 &
+Serwer &
+reagować na zmianę lub usunięcie
+wolnego terminu &
+oczekujące prośby nie dotyczyły
+nieistniejącego terminu. &
+Rezerwacje \\
+\hline
+ 
 \end{xltabular}
-
-
-\clearpage
+\normalsize
 
 \section*{Diagram przypadków użycia}
 
@@ -269,8 +415,9 @@ otrzymuje komunikat.
 }
 
 \pole{Aktorzy}{
-Użytkownik (główny),
-psycholog (odbiorca prośby).
+Użytkownik,
+Psycholog (odbiorca prośby),
+Serwer.
 }
 
 \pole{Wyzwalacz}{
@@ -282,9 +429,9 @@ prośby o konsultację.
 1. Użytkownik wybiera psychologa.\par
 2. Przegląda wolne terminy i wybiera termin.\par
 3. Potwierdza wysłanie prośby.\par
-4. System sprawdza dostępność terminu.\par
-5. System zapisuje prośbę jako „Oczekująca”.\par
-6. System przekazuje prośbę psychologowi
+4. Serwer sprawdza dostępność terminu.\par
+5. Serwer zapisuje prośbę jako „Oczekująca”.\par
+6. Serwer przekazuje prośbę psychologowi
 i potwierdza wysłanie użytkownikowi.
 }
 
@@ -292,7 +439,7 @@ i potwierdza wysłanie użytkownikowi.
 3a. Użytkownik rezygnuje -
 prośba nie zostaje zapisana.\par
 4a. Termin jest niedostępny -
-system umożliwia wybór innego.
+Serwer umożliwia wybór innego.
 }
 
 \end{tabularx}
@@ -341,8 +488,9 @@ wizyty; psycholog widzi komunikat.
 }
 
 \pole{Aktorzy}{
-Psycholog (główny),
-użytkownik (odbiorca potwierdzenia).
+Psycholog,
+Użytkownik (odbiorca potwierdzenia),
+Serwer.
 }
 
 \pole{Wyzwalacz}{
@@ -353,18 +501,18 @@ Psycholog wybiera opcję akceptacji prośby.
 1. Psycholog otwiera listę otrzymanych próśb.\par
 2. Wybiera prośbę i sprawdza jej szczegóły.\par
 3. Klika „Akceptuj”.\par
-4. System ponownie weryfikuje status prośby
+4. Serwer ponownie weryfikuje status prośby
 i dostępność terminu.\par
-5. System zapisuje rezerwację
+5. Serwer zapisuje rezerwację
 i nadaje jej status „Zaakceptowana”.\par
-6. System powiadamia użytkownika.
+6. Serwer powiadamia użytkownika.
 }
 
 \pole{Przebiegi alternatywne}{
 3a. Psycholog nie zatwierdza prośby -
 jej status pozostaje bez zmian.\par
 4a. Termin jest już zajęty lub prośba
-anulowana - akceptacja zostaje zablokowana.
+anulowana - Serwer blokuje akceptację.
 }
 
 \end{tabularx}
@@ -412,7 +560,9 @@ użytkownik otrzymuje komunikat.
 }
 
 \pole{Aktorzy}{
-Użytkownik.
+Użytkownik,
+Psycholog (odbiorca powiadomienia),
+Serwer.
 }
 
 \pole{Wyzwalacz}{
@@ -424,17 +574,17 @@ anulowania konsultacji.
 1. Użytkownik otwiera listę swoich konsultacji.\par
 2. Wybiera prośbę lub wizytę.\par
 3. Wybiera „Anuluj” i potwierdza decyzję.\par
-4. System zmienia status na „Anulowana”.\par
-5. System zwalnia termin,
+4. Serwer zmienia status na „Anulowana”.\par
+5. Serwer zwalnia termin,
 jeśli był zarezerwowany.\par
-6. System wyświetla potwierdzenie.
+6. Serwer wyświetla potwierdzenie i informuje psychologa.
 }
 
 \pole{Przebiegi alternatywne}{
 3a. Użytkownik rezygnuje -
 status pozostaje bez zmian.\par
 4a. Konsultacja nie może już być anulowana -
-system odrzuca operację.
+Serwer odrzuca operację.
 }
 
 \end{tabularx}
@@ -480,7 +630,8 @@ a psycholog otrzymuje komunikat.
 }
 
 \pole{Aktorzy}{
-Psycholog.
+Psycholog,
+Serwer.
 }
 
 \pole{Wyzwalacz}{
@@ -489,20 +640,20 @@ Psycholog otwiera zarządzanie harmonogramem.
 
 \pole{Przebieg podstawowy}{
 1. Psycholog otwiera harmonogram.\par
-2. System wyświetla wolne i zajęte terminy.\par
+2. Serwer wyświetla wolne i zajęte terminy.\par
 3. Psycholog wybiera „Dodaj termin”.\par
 4. Wybiera datę i godzinę.\par
-5. System weryfikuje dane
+5. Serwer weryfikuje dane
 i brak konfliktów.\par
 6. Psycholog zatwierdza zmianę.\par
-7. System zapisuje i wyświetla nowy termin.
+7. Serwer zapisuje i wyświetla nowy termin.
 }
 
 \pole{Przebiegi alternatywne}{
 3a. Psycholog edytuje istniejący wolny termin.\par
-3b. Psycholog usuwa wolny termin.\par
+3b. Psycholog usuwa wolny termin - Serwer reaguje na usunięcie terminu i aktualizuje powiązane prośby.\par
 5a. Termin koliduje z wizytą -
-system odrzuca zmianę.
+Serwer odrzuca zmianę.
 }
 
 \end{tabularx}
@@ -551,21 +702,31 @@ Status profilu pozostaje bez zmian,
 a profil nie zostaje opublikowany.
 }
 
+\pole{Aktorzy}{
+Administrator,
+Psycholog (właściciel profilu),
+Serwer.
+}
+
+\pole{Wyzwalacz}{
+Administrator wybiera profil oczekujący na weryfikację.
+}
+
 \pole{Przebieg podstawowy}{
 1. Administrator otwiera listę
 profili oczekujących.\par
 2. Wybiera profil i analizuje podane dane.\par
 3. Sprawdza wymagane kwalifikacje psychologa.\par
 4. Zatwierdza profil.\par
-5. System nadaje status „Zweryfikowany”.\par
-6. Profil staje się widoczny dla użytkowników.
+5. Serwer nadaje status „Zweryfikowany”.\par
+6. Serwer publikuje profil, czyniąc go widocznym dla użytkowników.
 }
 
 \pole{Przebiegi alternatywne}{
 3a. Brakuje danych --
 profil nadal oczekuje na weryfikację.\par
 4a. Administrator odrzuca profil --
-system zapisuje status „Odrzucony”
+Serwer zapisuje status „Odrzucony”
 i nie publikuje profilu.
 }
 
