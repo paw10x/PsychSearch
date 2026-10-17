@@ -1,0 +1,223 @@
+<mxfile host="app.diagrams.net">
+  <diagram name="Strona-1" id="2w2FP9hgvSK2BfGuQ_nn">
+    <mxGraphModel grid="1" page="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="ODubxdExHpxJOevmyR18-2" parent="1" style="verticalAlign=top;align=left;overflow=fill;html=1;whiteSpace=wrap;" value="&lt;p style=&quot;margin:0px;margin-top:4px;text-align:center;&quot;&gt;&lt;b&gt;ProblemTechniczny&lt;/b&gt;&lt;/p&gt;&lt;hr size=&quot;1&quot; style=&quot;border-style:solid;&quot;&gt;&lt;p style=&quot;margin:0px;margin-left:4px;&quot;&gt;+ id: UUID&lt;/p&gt;&lt;p style=&quot;margin:0px;margin-left:4px;&quot;&gt;+ opis: String&lt;/p&gt;&lt;p style=&quot;margin:0px;margin-left:4px;&quot;&gt;+ zrodlo: String&lt;/p&gt;&lt;p style=&quot;margin:0px;margin-left:4px;&quot;&gt;+ wykryty: LocalDateTime&lt;/p&gt;&lt;p style=&quot;margin:0px;margin-left:4px;&quot;&gt;- rozwiazany: bool&lt;/p&gt;&lt;hr size=&quot;1&quot; style=&quot;border-style:solid;&quot;&gt;&lt;p style=&quot;margin:0px;margin-left:4px;&quot;&gt;+ rozwiaz(opis: String)&lt;/p&gt;" vertex="1">
+          <mxGeometry height="150" width="160" x="30" y="20" as="geometry" />
+        </mxCell>
+        <mxCell id="ODubxdExHpxJOevmyR18-6" edge="1" parent="1" source="ODubxdExHpxJOevmyR18-4" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.75;exitY=1;exitDx=0;exitDy=0;" target="ODubxdExHpxJOevmyR18-5" value="">
+          <mxGeometry relative="1" x="0.36" as="geometry" />
+        </mxCell>
+        <mxCell id="ODubxdExHpxJOevmyR18-7" connectable="0" parent="ODubxdExHpxJOevmyR18-6" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" value="odbiorca" vertex="1">
+          <mxGeometry relative="1" x="0.552" as="geometry">
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="ODubxdExHpxJOevmyR18-8" connectable="0" parent="ODubxdExHpxJOevmyR18-6" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" value="0..*" vertex="1">
+          <mxGeometry relative="1" x="-0.605" y="-1" as="geometry">
+            <mxPoint x="-13" y="-11" as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="ODubxdExHpxJOevmyR18-4" parent="1" style="verticalAlign=top;align=left;overflow=fill;html=1;whiteSpace=wrap;" value="&lt;p style=&quot;margin:0px;margin-top:4px;text-align:center;&quot;&gt;&lt;b&gt;Powiadomienie&lt;/b&gt;&lt;/p&gt;&lt;hr size=&quot;1&quot; style=&quot;border-style:solid;&quot;&gt;&lt;p style=&quot;margin:0px;margin-left:4px;&quot;&gt;+ id: UUID&lt;/p&gt;&lt;p style=&quot;margin:0px;margin-left:4px;&quot;&gt;+ tresc: String&lt;/p&gt;&lt;p style=&quot;margin:0px;margin-left:4px;&quot;&gt;+ dataWyslania: LocalDateTime&lt;/p&gt;&lt;p style=&quot;margin:0px;margin-left:4px;&quot;&gt;- przeczytane: bool&lt;/p&gt;&lt;hr size=&quot;1&quot; style=&quot;border-style:solid;&quot;&gt;&lt;p style=&quot;margin:0px;margin-left:4px;&quot;&gt;+ oznaczPrzeczytane()&lt;/p&gt;" vertex="1">
+          <mxGeometry height="130" width="180" x="240" y="60" as="geometry" />
+        </mxCell>
+        <mxCell id="ODubxdExHpxJOevmyR18-5" parent="1" style="verticalAlign=top;align=left;overflow=fill;html=1;whiteSpace=wrap;" value="&lt;p style=&quot;margin:0px;margin-top:4px;text-align:center;&quot;&gt;&lt;b&gt;{abstract}&lt;/b&gt;&lt;br&gt;&lt;b&gt;Konto&lt;/b&gt;&lt;/p&gt;&lt;hr size=&quot;1&quot; style=&quot;border-style:solid;&quot;&gt;&lt;p style=&quot;margin:0px;margin-left:4px;&quot;&gt;+ id: UUID&lt;br&gt;+ email: String&lt;/p&gt;&lt;p style=&quot;margin:0px;margin-left:4px;&quot;&gt;- hasloHash: String&lt;/p&gt;&lt;p style=&quot;margin:0px;margin-left:4px;&quot;&gt;+ imie: String&lt;/p&gt;&lt;p style=&quot;margin:0px;margin-left:4px;&quot;&gt;+ nazwisko: String&lt;/p&gt;&lt;p style=&quot;margin:0px;margin-left:4px;&quot;&gt;- status: StatusKonta&lt;/p&gt;&lt;p style=&quot;margin:0px;margin-left:4px;&quot;&gt;- powodBlokady: String&lt;span style=&quot;background-color: transparent; color: light-dark(rgb(0, 0, 0), rgb(255, 255, 255));&quot;&gt;&amp;nbsp;&lt;/span&gt;&lt;/p&gt;&lt;hr size=&quot;1&quot; style=&quot;border-style:solid;&quot;&gt;&lt;p style=&quot;margin:0px;margin-left:4px;&quot;&gt;+ sprawdzHaslo(haslo: String): bool&lt;br&gt;+ zablokuj(powod: String)&lt;/p&gt;&lt;p style=&quot;margin:0px;margin-left:4px;&quot;&gt;+ odblokuj()&lt;/p&gt;&lt;p style=&quot;margin:0px;margin-left:4px;&quot;&gt;+ czyAktywne(): bool&lt;/p&gt;" vertex="1">
+          <mxGeometry height="220" width="200" x="460" y="210" as="geometry" />
+        </mxCell>
+        <mxCell id="ODubxdExHpxJOevmyR18-9" parent="1" style="verticalAlign=top;align=left;overflow=fill;html=1;whiteSpace=wrap;" value="&lt;p style=&quot;margin:0px;margin-top:4px;text-align:center;&quot;&gt;«enumeration»&lt;br&gt;&lt;b&gt;StatusKonta&lt;/b&gt;&lt;/p&gt;&lt;hr size=&quot;1&quot; style=&quot;border-style:solid;&quot;&gt;&lt;p style=&quot;margin:0px;margin-left:4px;&quot;&gt;aktywne&lt;br&gt;zablokowane&lt;/p&gt;&lt;p style=&quot;margin:0px;margin-left:4px;&quot;&gt;&lt;br&gt;&lt;/p&gt;" vertex="1">
+          <mxGeometry height="90" width="100" x="280" y="235" as="geometry" />
+        </mxCell>
+        <mxCell id="ODubxdExHpxJOevmyR18-14" edge="1" parent="1" source="ODubxdExHpxJOevmyR18-10" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.25;entryY=1;entryDx=0;entryDy=0;endArrow=block;endFill=0;" target="ODubxdExHpxJOevmyR18-5">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="ODubxdExHpxJOevmyR18-10" parent="1" style="verticalAlign=top;align=left;overflow=fill;html=1;whiteSpace=wrap;fillColor=#dae8fc;strokeColor=#6c8ebf;" value="&lt;p style=&quot;margin:0px;margin-top:4px;text-align:center;&quot;&gt;&lt;b&gt;Użytkownik&lt;/b&gt;&lt;/p&gt;" vertex="1">
+          <mxGeometry height="30" width="160" x="240" y="360" as="geometry" />
+        </mxCell>
+        <mxCell id="ODubxdExHpxJOevmyR18-13" edge="1" parent="1" source="ODubxdExHpxJOevmyR18-12" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.5;entryY=1;entryDx=0;entryDy=0;endArrow=block;endFill=0;" target="ODubxdExHpxJOevmyR18-5">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="ODubxdExHpxJOevmyR18-12" parent="1" style="verticalAlign=top;align=left;overflow=fill;html=1;whiteSpace=wrap;fillColor=#dae8fc;strokeColor=#6c8ebf;" value="&lt;p style=&quot;margin:0px;margin-top:4px;text-align:center;&quot;&gt;&lt;b&gt;Administrator&lt;/b&gt;&lt;/p&gt;" vertex="1">
+          <mxGeometry height="30" width="160" x="450" y="472" as="geometry" />
+        </mxCell>
+        <mxCell id="ODubxdExHpxJOevmyR18-16" edge="1" parent="1" source="ODubxdExHpxJOevmyR18-5" style="endArrow=open;endSize=12;dashed=1;html=1;rounded=0;exitX=0;exitY=0.5;exitDx=0;exitDy=0;entryX=1;entryY=0.5;entryDx=0;entryDy=0;edgeStyle=orthogonalEdgeStyle;" target="ODubxdExHpxJOevmyR18-9" value="">
+          <mxGeometry relative="1" width="160" as="geometry">
+            <mxPoint x="230" y="300" as="sourcePoint" />
+            <mxPoint x="390" y="300" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="ODubxdExHpxJOevmyR18-17" parent="1" style="verticalAlign=top;align=left;overflow=fill;html=1;whiteSpace=wrap;fillColor=#dae8fc;strokeColor=#6c8ebf;" value="&lt;p style=&quot;margin:0px;margin-top:4px;text-align:center;&quot;&gt;&lt;b&gt;Psycholog&lt;/b&gt;&lt;/p&gt;&lt;hr size=&quot;1&quot; style=&quot;border-style:solid;&quot;&gt;&lt;p style=&quot;margin:0px;margin-left:4px;&quot;&gt;- profil: ProfilPsychologa&lt;/p&gt;&lt;p style=&quot;margin:0px;margin-left:4px;&quot;&gt;- harmonogram: Harmonogram&lt;/p&gt;" vertex="1">
+          <mxGeometry height="66" width="180" x="690" y="472" as="geometry" />
+        </mxCell>
+        <mxCell id="ODubxdExHpxJOevmyR18-18" edge="1" parent="1" source="ODubxdExHpxJOevmyR18-17" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.75;entryY=1;entryDx=0;entryDy=0;endArrow=block;endFill=0;exitX=0.25;exitY=0;exitDx=0;exitDy=0;" target="ODubxdExHpxJOevmyR18-5">
+          <mxGeometry relative="1" x="-0.2695" as="geometry">
+            <mxPoint x="480" y="574" as="sourcePoint" />
+            <mxPoint x="460" y="510" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="ODubxdExHpxJOevmyR18-19" parent="1" style="verticalAlign=top;align=left;overflow=fill;html=1;whiteSpace=wrap;" value="&lt;p style=&quot;margin:0px;margin-top:4px;text-align:center;&quot;&gt;&lt;b&gt;ProfilPsychologa&lt;/b&gt;&lt;/p&gt;&lt;hr size=&quot;1&quot; style=&quot;border-style:solid;&quot;&gt;&lt;p style=&quot;margin:0px;margin-left:4px;&quot;&gt;- specjalizacje: List&amp;lt;Specjalizacje&amp;gt;&lt;/p&gt;&lt;p style=&quot;margin:0px;margin-left:4px;&quot;&gt;+ kwalifikacje: String&lt;/p&gt;&lt;p style=&quot;margin:0px;margin-left:4px;&quot;&gt;- status: StatusProfilu&lt;/p&gt;&lt;hr size=&quot;1&quot; style=&quot;border-style:solid;&quot;&gt;&lt;p style=&quot;margin:0px;margin-left:4px;&quot;&gt;+ dodajSpecjalizacje(s: Specjalizacja)&lt;/p&gt;&lt;p style=&quot;margin:0px;margin-left:4px;&quot;&gt;+ edytujSpecjalizacje(stara: Specjalizacja, nowa: Specjalizacja)&lt;/p&gt;&lt;p style=&quot;margin:0px;margin-left:4px;&quot;&gt;+ czyKompletny(): bool&lt;/p&gt;&lt;p style=&quot;margin:0px;margin-left:4px;&quot;&gt;+ zatwierdz()&lt;/p&gt;&lt;p style=&quot;margin:0px;margin-left:4px;&quot;&gt;+ odrzuc()&lt;/p&gt;&lt;p style=&quot;margin:0px;margin-left:4px;&quot;&gt;+ czyPubliczny(): bool&lt;/p&gt;" vertex="1">
+          <mxGeometry height="190" width="230" x="690" y="30" as="geometry" />
+        </mxCell>
+        <mxCell id="ODubxdExHpxJOevmyR18-20" parent="1" style="verticalAlign=top;align=left;overflow=fill;html=1;whiteSpace=wrap;" value="&lt;p style=&quot;margin:0px;margin-top:4px;text-align:center;&quot;&gt;«enumeration»&lt;br&gt;&lt;b&gt;StatusProfilu&lt;/b&gt;&lt;/p&gt;&lt;hr size=&quot;1&quot; style=&quot;border-style:solid;&quot;&gt;&lt;p style=&quot;margin:0px;margin-left:4px;&quot;&gt;oczekuje&lt;br&gt;zweryfikowany&lt;/p&gt;&lt;p style=&quot;margin:0px;margin-left:4px;&quot;&gt;odrzucony&lt;/p&gt;" vertex="1">
+          <mxGeometry height="90" width="100" x="550" y="30" as="geometry" />
+        </mxCell>
+        <mxCell id="ODubxdExHpxJOevmyR18-21" edge="1" parent="1" source="ODubxdExHpxJOevmyR18-19" style="endArrow=open;endSize=12;dashed=1;html=1;rounded=0;exitX=0;exitY=0.25;exitDx=0;exitDy=0;entryX=0.5;entryY=1;entryDx=0;entryDy=0;edgeStyle=orthogonalEdgeStyle;" target="ODubxdExHpxJOevmyR18-20" value="">
+          <mxGeometry relative="1" width="160" x="-0.7031" as="geometry">
+            <mxPoint x="986" y="140" as="sourcePoint" />
+            <mxPoint x="910" y="140" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="ODubxdExHpxJOevmyR18-22" parent="1" style="verticalAlign=top;align=left;overflow=fill;html=1;whiteSpace=wrap;" value="&lt;p style=&quot;margin:0px;margin-top:4px;text-align:center;&quot;&gt;&lt;b&gt;Harmonogram&lt;/b&gt;&lt;/p&gt;&lt;hr size=&quot;1&quot; style=&quot;border-style:solid;&quot;&gt;&lt;p style=&quot;margin:0px;margin-left:4px;&quot;&gt;- terminy: List&amp;lt;Termin&amp;gt;&lt;/p&gt;&lt;hr size=&quot;1&quot; style=&quot;border-style:solid;&quot;&gt;&lt;p style=&quot;margin:0px;margin-left:4px;&quot;&gt;+ dodajTermin(start: LocalDateTime, koniec: LocalDateTime): bool&lt;/p&gt;&lt;p style=&quot;margin:0px;margin-left:4px;&quot;&gt;+ usunTermin(termin: Termin): bool&lt;/p&gt;&lt;p style=&quot;margin:0px;margin-left:4px;&quot;&gt;+ czyKoliduje(start: LocalDateTime, koniec: LocalDateTime)&lt;/p&gt;&lt;p style=&quot;margin:0px;margin-left:4px;&quot;&gt;+ wolneTerminy(): List&amp;lt;Termin&amp;gt;&lt;/p&gt;" vertex="1">
+          <mxGeometry height="170" width="200" x="790" y="235" as="geometry" />
+        </mxCell>
+        <mxCell id="ODubxdExHpxJOevmyR18-23" edge="1" parent="1" source="ODubxdExHpxJOevmyR18-19" style="endArrow=diamondThin;endFill=1;endSize=24;html=1;rounded=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;exitX=0.25;exitY=1;exitDx=0;exitDy=0;edgeStyle=orthogonalEdgeStyle;" target="ODubxdExHpxJOevmyR18-17" value="">
+          <mxGeometry relative="1" width="160" x="0.0017" as="geometry">
+            <Array as="points">
+              <mxPoint x="747.5" y="430" />
+              <mxPoint x="780" y="430" />
+            </Array>
+            <mxPoint x="770" y="370" as="sourcePoint" />
+            <mxPoint x="930" y="370" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="ODubxdExHpxJOevmyR18-24" connectable="0" parent="ODubxdExHpxJOevmyR18-23" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" value="1" vertex="1">
+          <mxGeometry relative="1" x="-0.8566" y="-1" as="geometry">
+            <mxPoint x="4" y="-10" as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="ODubxdExHpxJOevmyR18-25" connectable="0" parent="ODubxdExHpxJOevmyR18-23" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" value="1" vertex="1">
+          <mxGeometry relative="1" x="0.7849" as="geometry">
+            <mxPoint x="10" y="19" as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="ODubxdExHpxJOevmyR18-26" edge="1" parent="1" source="ODubxdExHpxJOevmyR18-22" style="endArrow=diamondThin;endFill=1;endSize=24;html=1;rounded=0;entryX=0.75;entryY=0;entryDx=0;entryDy=0;exitX=0.25;exitY=1;exitDx=0;exitDy=0;edgeStyle=orthogonalEdgeStyle;" target="ODubxdExHpxJOevmyR18-17" value="">
+          <mxGeometry relative="1" width="160" x="-0.2644" as="geometry">
+            <Array as="points">
+              <mxPoint x="840" y="410" />
+              <mxPoint x="840" y="440" />
+              <mxPoint x="825" y="440" />
+            </Array>
+            <mxPoint x="860.5" y="440" as="sourcePoint" />
+            <mxPoint x="892.5" y="692" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="ODubxdExHpxJOevmyR18-27" connectable="0" parent="ODubxdExHpxJOevmyR18-26" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" value="1" vertex="1">
+          <mxGeometry relative="1" x="-0.5632" y="-1" as="geometry">
+            <mxPoint x="4" y="-10" as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="ODubxdExHpxJOevmyR18-28" connectable="0" parent="ODubxdExHpxJOevmyR18-26" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" value="1" vertex="1">
+          <mxGeometry relative="1" x="0.2644" as="geometry">
+            <mxPoint x="10" y="19" as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="ODubxdExHpxJOevmyR18-29" parent="1" style="verticalAlign=top;align=left;overflow=fill;html=1;whiteSpace=wrap;" value="&lt;p style=&quot;margin:0px;margin-top:4px;text-align:center;&quot;&gt;«enumeration»&lt;br&gt;&lt;b&gt;StatusTerminu&lt;/b&gt;&lt;/p&gt;&lt;hr size=&quot;1&quot; style=&quot;border-style:solid;&quot;&gt;&lt;p style=&quot;margin:0px;margin-left:4px;&quot;&gt;wolny&lt;/p&gt;&lt;p style=&quot;margin:0px;margin-left:4px;&quot;&gt;zarezerwowany&lt;/p&gt;" vertex="1">
+          <mxGeometry height="90" width="100" x="1050" y="130" as="geometry" />
+        </mxCell>
+        <mxCell id="ODubxdExHpxJOevmyR18-30" parent="1" style="verticalAlign=top;align=left;overflow=fill;html=1;whiteSpace=wrap;" value="&lt;p style=&quot;margin:0px;margin-top:4px;text-align:center;&quot;&gt;&lt;b&gt;Termin&lt;/b&gt;&lt;/p&gt;&lt;hr size=&quot;1&quot; style=&quot;border-style:solid;&quot;&gt;&lt;p style=&quot;margin:0px;margin-left:4px;&quot;&gt;+ id: UUID&lt;/p&gt;&lt;p style=&quot;margin:0px;margin-left:4px;&quot;&gt;+ start: LocalDateTime&lt;/p&gt;&lt;p style=&quot;margin:0px;margin-left:4px;&quot;&gt;+ koniec: LocalDateTime&lt;/p&gt;&lt;p style=&quot;margin:0px;margin-left:4px;&quot;&gt;- status: StatusTerminu&lt;/p&gt;&lt;hr size=&quot;1&quot; style=&quot;border-style:solid;&quot;&gt;&lt;p style=&quot;margin:0px;margin-left:4px;&quot;&gt;+ czyWolny(): bool&lt;/p&gt;&lt;p style=&quot;margin:0px;margin-left:4px;&quot;&gt;+ zarezerwuj(): bool&lt;/p&gt;&lt;p style=&quot;margin:0px;margin-left:4px;&quot;&gt;+ zwolnij()&lt;/p&gt;" vertex="1">
+          <mxGeometry height="155" width="160" x="1020" y="250" as="geometry" />
+        </mxCell>
+        <mxCell id="ODubxdExHpxJOevmyR18-31" edge="1" parent="1" source="ODubxdExHpxJOevmyR18-30" style="endArrow=open;endSize=12;dashed=1;html=1;rounded=0;entryX=0.5;entryY=1;entryDx=0;entryDy=0;" target="ODubxdExHpxJOevmyR18-29" value="">
+          <mxGeometry relative="1" width="160" as="geometry">
+            <mxPoint x="870" y="410" as="sourcePoint" />
+            <mxPoint x="1030" y="410" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="ODubxdExHpxJOevmyR18-32" edge="1" parent="1" source="ODubxdExHpxJOevmyR18-30" style="endArrow=diamondThin;endFill=1;endSize=24;html=1;rounded=0;exitX=0.25;exitY=1;exitDx=0;exitDy=0;edgeStyle=orthogonalEdgeStyle;" value="">
+          <mxGeometry relative="1" width="160" x="-0.4244" as="geometry">
+            <Array as="points">
+              <mxPoint x="1060" y="450" />
+              <mxPoint x="940" y="450" />
+            </Array>
+            <mxPoint x="1005" y="450" as="sourcePoint" />
+            <mxPoint x="940" y="410" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="ODubxdExHpxJOevmyR18-34" connectable="0" parent="ODubxdExHpxJOevmyR18-32" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" value="1" vertex="1">
+          <mxGeometry relative="1" x="0.5122" as="geometry">
+            <mxPoint y="-20" as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="ODubxdExHpxJOevmyR18-37" parent="1" style="verticalAlign=top;align=left;overflow=fill;html=1;whiteSpace=wrap;" value="&lt;p style=&quot;margin:0px;margin-top:4px;text-align:center;&quot;&gt;«enumeration»&lt;br&gt;&lt;b&gt;StatusKonsultacji&lt;/b&gt;&lt;/p&gt;&lt;hr size=&quot;1&quot; style=&quot;border-style:solid;&quot;&gt;&lt;p style=&quot;margin:0px;margin-left:4px;&quot;&gt;oczekujaca&lt;br&gt;zaakceptowana&lt;/p&gt;&lt;p style=&quot;margin:0px;margin-left:4px;&quot;&gt;odrzucona&lt;/p&gt;&lt;p style=&quot;margin:0px;margin-left:4px;&quot;&gt;anulowana&lt;/p&gt;&lt;p style=&quot;margin:0px;margin-left:4px;&quot;&gt;&lt;br&gt;&lt;/p&gt;" vertex="1">
+          <mxGeometry height="110" width="120" x="20" y="200" as="geometry" />
+        </mxCell>
+        <mxCell id="ODubxdExHpxJOevmyR18-38" parent="1" style="verticalAlign=top;align=left;overflow=fill;html=1;whiteSpace=wrap;" value="&lt;p style=&quot;margin:0px;margin-top:4px;text-align:center;&quot;&gt;&lt;b&gt;Konsultacja&lt;/b&gt;&lt;/p&gt;&lt;hr size=&quot;1&quot; style=&quot;border-style:solid;&quot;&gt;&lt;p style=&quot;margin:0px;margin-left:4px;&quot;&gt;+ id: UUID&lt;/p&gt;&lt;p style=&quot;margin:0px;margin-left:4px;&quot;&gt;+ utworzona: LocalDateTime&lt;/p&gt;&lt;p style=&quot;margin:0px;margin-left:4px;&quot;&gt;- status: StatusKonsultacji&lt;/p&gt;&lt;hr size=&quot;1&quot; style=&quot;border-style:solid;&quot;&gt;&lt;p style=&quot;margin:0px;margin-left:4px;&quot;&gt;+ zaakceptuj()&lt;/p&gt;&lt;p style=&quot;margin:0px;margin-left:4px;&quot;&gt;+ odrzuc()&lt;/p&gt;&lt;p style=&quot;margin:0px;margin-left:4px;&quot;&gt;+ anuluj()&lt;/p&gt;&lt;p style=&quot;margin:0px;margin-left:4px;&quot;&gt;+ czyMoznaAnulowac(limit: Duration): bool&lt;/p&gt;" vertex="1">
+          <mxGeometry height="170" width="160" x="50" y="340" as="geometry" />
+        </mxCell>
+        <mxCell id="ODubxdExHpxJOevmyR18-41" edge="1" parent="1" source="ODubxdExHpxJOevmyR18-38" style="endArrow=open;endSize=12;dashed=1;html=1;rounded=0;exitX=0.5;exitY=0;exitDx=0;exitDy=0;entryX=0.5;entryY=1;entryDx=0;entryDy=0;edgeStyle=orthogonalEdgeStyle;" target="ODubxdExHpxJOevmyR18-37" value="">
+          <mxGeometry relative="1" width="160" x="-0.3684" as="geometry">
+            <mxPoint x="280" y="340" as="sourcePoint" />
+            <mxPoint x="200" y="300" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="ODubxdExHpxJOevmyR18-42" edge="1" parent="1" source="ODubxdExHpxJOevmyR18-4" style="endArrow=open;endSize=12;dashed=1;html=1;rounded=0;exitX=0.25;exitY=1;exitDx=0;exitDy=0;entryX=0.75;entryY=0;entryDx=0;entryDy=0;edgeStyle=orthogonalEdgeStyle;" target="ODubxdExHpxJOevmyR18-38" value="dotyczy">
+          <mxGeometry relative="1" width="160" x="-0.283" as="geometry">
+            <mxPoint as="offset" />
+            <Array as="points">
+              <mxPoint x="285" y="220" />
+              <mxPoint x="170" y="220" />
+            </Array>
+            <mxPoint x="260" y="370" as="sourcePoint" />
+            <mxPoint x="420" y="370" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="ODubxdExHpxJOevmyR18-43" edge="1" parent="1" source="ODubxdExHpxJOevmyR18-38" style="endArrow=block;endFill=1;html=1;edgeStyle=orthogonalEdgeStyle;align=left;verticalAlign=top;rounded=0;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.75;entryY=1;entryDx=0;entryDy=0;" target="ODubxdExHpxJOevmyR18-30" value="dotyczy">
+          <mxGeometry relative="1" x="-0.9522" y="-20" as="geometry">
+            <mxPoint as="offset" />
+            <Array as="points">
+              <mxPoint x="130" y="580" />
+              <mxPoint x="1140" y="580" />
+            </Array>
+            <mxPoint x="260" y="290" as="sourcePoint" />
+            <mxPoint x="420" y="290" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="ODubxdExHpxJOevmyR18-44" connectable="0" parent="ODubxdExHpxJOevmyR18-43" style="edgeLabel;resizable=0;html=1;align=left;verticalAlign=bottom;" value="0..*" vertex="1">
+          <mxGeometry relative="1" x="-1" as="geometry">
+            <mxPoint y="20" as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="ODubxdExHpxJOevmyR18-45" connectable="0" parent="ODubxdExHpxJOevmyR18-43" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" value="1" vertex="1">
+          <mxGeometry relative="1" x="0.9789" y="-1" as="geometry">
+            <mxPoint x="9" as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="ODubxdExHpxJOevmyR18-46" edge="1" parent="1" source="ODubxdExHpxJOevmyR18-38" style="endArrow=block;endFill=1;html=1;edgeStyle=orthogonalEdgeStyle;align=left;verticalAlign=top;rounded=0;entryX=0.5;entryY=1;entryDx=0;entryDy=0;exitX=1;exitY=0.5;exitDx=0;exitDy=0;" target="ODubxdExHpxJOevmyR18-10" value="umawia">
+          <mxGeometry relative="1" x="-0.4483" y="15" as="geometry">
+            <mxPoint as="offset" />
+            <mxPoint x="370" y="490" as="sourcePoint" />
+            <mxPoint x="530" y="490" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="ODubxdExHpxJOevmyR18-47" connectable="0" parent="ODubxdExHpxJOevmyR18-46" style="edgeLabel;resizable=0;html=1;align=left;verticalAlign=bottom;" value="1" vertex="1">
+          <mxGeometry relative="1" x="-1" as="geometry">
+            <mxPoint x="110" y="-5" as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="ODubxdExHpxJOevmyR18-48" connectable="0" parent="ODubxdExHpxJOevmyR18-46" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" value="0..*" vertex="1">
+          <mxGeometry relative="1" x="-0.9287" as="geometry">
+            <mxPoint x="5" y="-15" as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="ODubxdExHpxJOevmyR18-49" edge="1" parent="1" source="ODubxdExHpxJOevmyR18-38" style="endArrow=block;endFill=1;html=1;edgeStyle=orthogonalEdgeStyle;align=left;verticalAlign=top;rounded=0;entryX=0.25;entryY=1;entryDx=0;entryDy=0;exitX=1;exitY=0.75;exitDx=0;exitDy=0;" target="ODubxdExHpxJOevmyR18-17" value="otrzymuje">
+          <mxGeometry relative="1" x="-0.6019" y="-20" as="geometry">
+            <mxPoint as="offset" />
+            <Array as="points">
+              <mxPoint x="310" y="467.5" />
+              <mxPoint x="310" y="548" />
+              <mxPoint x="735" y="548" />
+            </Array>
+            <mxPoint x="300" y="565" as="sourcePoint" />
+            <mxPoint x="410" y="530" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="ODubxdExHpxJOevmyR18-50" connectable="0" parent="ODubxdExHpxJOevmyR18-49" style="edgeLabel;resizable=0;html=1;align=left;verticalAlign=bottom;" value="1" vertex="1">
+          <mxGeometry relative="1" x="-1" as="geometry">
+            <mxPoint x="530" y="93" as="offset" />
+          </mxGeometry>
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
