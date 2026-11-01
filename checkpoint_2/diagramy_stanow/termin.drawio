@@ -1,0 +1,74 @@
+<mxfile host="65bd71144e">
+    <diagram id="UWBtP96gWmTo_9fJbhoT" name="Page-1">
+        <mxGraphModel dx="672" dy="568" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
+            <root>
+                <mxCell id="0"/>
+                <mxCell id="1" parent="0"/>
+                <mxCell id="Urk8oreryFMcghNVg3RN-3" edge="1" parent="1" source="Urk8oreryFMcghNVg3RN-1" style="edgeStyle=none;html=1;" target="Urk8oreryFMcghNVg3RN-2">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="Urk8oreryFMcghNVg3RN-1" parent="1" style="ellipse;fillColor=strokeColor;html=1;" value="" vertex="1">
+                    <mxGeometry height="30" width="30" x="440" y="50" as="geometry"/>
+                </mxCell>
+                <mxCell id="Urk8oreryFMcghNVg3RN-5" edge="1" parent="1" source="Urk8oreryFMcghNVg3RN-2" style="edgeStyle=orthogonalEdgeStyle;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;" target="Urk8oreryFMcghNVg3RN-6">
+                    <mxGeometry relative="1" as="geometry">
+                        <mxPoint x="670" y="150" as="targetPoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="Urk8oreryFMcghNVg3RN-7" connectable="0" parent="Urk8oreryFMcghNVg3RN-5" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];inheritText=1;" value="usunTermin()&amp;nbsp;&lt;div&gt;/ naTerminZmieniony(id)&lt;/div&gt;" vertex="1">
+                    <mxGeometry relative="1" x="-0.4829" y="-3" as="geometry">
+                        <mxPoint x="38" as="offset"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="Urk8oreryFMcghNVg3RN-8" edge="1" parent="1" source="Urk8oreryFMcghNVg3RN-2" style="edgeStyle=orthogonalEdgeStyle;html=1;entryX=0.5;entryY=0;entryDx=0;entryDy=0;exitX=0.25;exitY=1;exitDx=0;exitDy=0;" target="Urk8oreryFMcghNVg3RN-4">
+                    <mxGeometry relative="1" x="0.0741" as="geometry"/>
+                </mxCell>
+                <mxCell id="Urk8oreryFMcghNVg3RN-10" connectable="0" parent="Urk8oreryFMcghNVg3RN-8" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];inheritText=1;" value="zarezerwuj()" vertex="1">
+                    <mxGeometry relative="1" x="-0.5249" as="geometry">
+                        <mxPoint as="offset"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="Urk8oreryFMcghNVg3RN-2" parent="1" style="html=1;align=center;verticalAlign=top;rounded=1;absoluteArcSize=1;arcSize=10;dashed=0;whiteSpace=wrap;" value="&lt;div&gt;WOLNY&lt;/div&gt;&lt;hr&gt;zmien(start, koniec) [brak kolizji] / naTerminZmieniony(id)" vertex="1">
+                    <mxGeometry height="70" width="205" x="352.5" y="130" as="geometry"/>
+                </mxCell>
+                <mxCell id="Urk8oreryFMcghNVg3RN-9" edge="1" parent="1" source="Urk8oreryFMcghNVg3RN-4" style="edgeStyle=orthogonalEdgeStyle;html=1;entryX=0.5;entryY=1;entryDx=0;entryDy=0;" target="Urk8oreryFMcghNVg3RN-2">
+                    <mxGeometry relative="1" x="-0.2471" as="geometry"/>
+                </mxCell>
+                <mxCell id="Urk8oreryFMcghNVg3RN-11" connectable="0" parent="Urk8oreryFMcghNVg3RN-9" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];inheritText=1;" value="[else]" vertex="1">
+                    <mxGeometry relative="1" x="0.65" y="-1" as="geometry">
+                        <mxPoint x="-1" y="6" as="offset"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="Urk8oreryFMcghNVg3RN-12" edge="1" parent="1" source="Urk8oreryFMcghNVg3RN-4" style="edgeStyle=orthogonalEdgeStyle;html=1;entryX=0.25;entryY=0;entryDx=0;entryDy=0;" target="Urk8oreryFMcghNVg3RN-13">
+                    <mxGeometry relative="1" as="geometry">
+                        <mxPoint x="425" y="369.9999999999999" as="targetPoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="Urk8oreryFMcghNVg3RN-14" connectable="0" parent="Urk8oreryFMcghNVg3RN-12" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];inheritText=1;" value="[zapiszZmienionaWersja(termin) = true]" vertex="1">
+                    <mxGeometry relative="1" x="-0.1833" y="-1" as="geometry">
+                        <mxPoint x="-11" y="-13" as="offset"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="Urk8oreryFMcghNVg3RN-4" parent="1" style="rhombus;" value="" vertex="1">
+                    <mxGeometry height="30" width="30" x="410" y="265" as="geometry"/>
+                </mxCell>
+                <mxCell id="Urk8oreryFMcghNVg3RN-6" parent="1" style="shape=umlDestroy;html=1;" value="" vertex="1">
+                    <mxGeometry height="30" width="30" x="720" y="150" as="geometry"/>
+                </mxCell>
+                <mxCell id="Urk8oreryFMcghNVg3RN-16" edge="1" parent="1" source="Urk8oreryFMcghNVg3RN-13" style="edgeStyle=orthogonalEdgeStyle;html=1;entryX=0.75;entryY=1;entryDx=0;entryDy=0;exitX=0.75;exitY=0;exitDx=0;exitDy=0;" target="Urk8oreryFMcghNVg3RN-2">
+                    <mxGeometry relative="1" x="0.1983" as="geometry">
+                        <mxPoint x="500" y="210" as="targetPoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="Urk8oreryFMcghNVg3RN-17" connectable="0" parent="Urk8oreryFMcghNVg3RN-16" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];inheritText=1;" value="zwolnij()" vertex="1">
+                    <mxGeometry relative="1" x="-0.5613" y="4" as="geometry">
+                        <mxPoint x="5" y="31" as="offset"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="Urk8oreryFMcghNVg3RN-13" parent="1" style="html=1;align=center;verticalAlign=top;rounded=1;absoluteArcSize=1;arcSize=10;dashed=0;whiteSpace=wrap;" value="&lt;div&gt;ZAREZERWOWANY&lt;/div&gt;&lt;hr&gt;zarezerwuj() / zwroc false&lt;div&gt;usunTermin() / zwroc false&lt;/div&gt;" vertex="1">
+                    <mxGeometry height="70" width="185" x="420" y="350" as="geometry"/>
+                </mxCell>
+            </root>
+        </mxGraphModel>
+    </diagram>
+</mxfile>

@@ -1,0 +1,36 @@
+<mxfile host="65bd71144e">
+    <diagram id="MFFoGdZOKyT0y_0mCNS0" name="Page-1">
+        <mxGraphModel dx="323" dy="273" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
+            <root>
+                <mxCell id="0"/>
+                <mxCell id="1" parent="0"/>
+                <mxCell id="gihmvGUG02Kyc8SzBqi--1" edge="1" parent="1" source="gihmvGUG02Kyc8SzBqi--2" style="edgeStyle=none;html=1;" target="gihmvGUG02Kyc8SzBqi--5">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="gihmvGUG02Kyc8SzBqi--2" parent="1" style="ellipse;fillColor=strokeColor;html=1;" value="" vertex="1">
+                    <mxGeometry height="30" width="30" x="295" y="120" as="geometry"/>
+                </mxCell>
+                <mxCell id="gihmvGUG02Kyc8SzBqi--3" edge="1" parent="1" source="gihmvGUG02Kyc8SzBqi--5" style="edgeStyle=none;html=1;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" target="gihmvGUG02Kyc8SzBqi--7">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="gihmvGUG02Kyc8SzBqi--4" connectable="0" parent="gihmvGUG02Kyc8SzBqi--3" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];inheritText=1;" value="rozwiaz(opis)" vertex="1">
+                    <mxGeometry relative="1" x="-0.1547" y="-1" as="geometry">
+                        <mxPoint as="offset"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="gihmvGUG02Kyc8SzBqi--5" parent="1" style="html=1;align=center;verticalAlign=top;rounded=1;absoluteArcSize=1;arcSize=10;dashed=0;whiteSpace=wrap;" value="ZAREJESTROWANY" vertex="1">
+                    <mxGeometry height="40" width="140" x="240" y="190" as="geometry"/>
+                </mxCell>
+                <mxCell id="gihmvGUG02Kyc8SzBqi--6" edge="1" parent="1" source="gihmvGUG02Kyc8SzBqi--7" style="edgeStyle=none;html=1;" target="gihmvGUG02Kyc8SzBqi--8">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="gihmvGUG02Kyc8SzBqi--7" parent="1" style="html=1;align=center;verticalAlign=top;rounded=1;absoluteArcSize=1;arcSize=10;dashed=0;whiteSpace=wrap;" value="ROZWIAZANY" vertex="1">
+                    <mxGeometry height="40" width="140" x="240" y="280" as="geometry"/>
+                </mxCell>
+                <mxCell id="gihmvGUG02Kyc8SzBqi--8" parent="1" style="ellipse;html=1;shape=endState;fillColor=strokeColor;" value="" vertex="1">
+                    <mxGeometry height="30" width="30" x="295" y="360" as="geometry"/>
+                </mxCell>
+            </root>
+        </mxGraphModel>
+    </diagram>
+</mxfile>

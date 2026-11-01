@@ -1,0 +1,38 @@
+<mxfile host="65bd71144e">
+    <diagram id="21l5q1_O4ZO1djPggukx" name="Page-1">
+        <mxGraphModel dx="467" dy="394" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
+            <root>
+                <mxCell id="0"/>
+                <mxCell id="1" parent="0"/>
+                <mxCell id="Z-wsrpMU9JrykXgesedp-5" edge="1" parent="1" source="Z-wsrpMU9JrykXgesedp-1" style="edgeStyle=none;html=1;" target="Z-wsrpMU9JrykXgesedp-2">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="Z-wsrpMU9JrykXgesedp-1" parent="1" style="ellipse;fillColor=strokeColor;html=1;" value="" vertex="1">
+                    <mxGeometry height="30" width="30" x="330" y="280" as="geometry"/>
+                </mxCell>
+                <mxCell id="Z-wsrpMU9JrykXgesedp-6" edge="1" parent="1" source="Z-wsrpMU9JrykXgesedp-2" style="edgeStyle=orthogonalEdgeStyle;html=1;exitX=0.25;exitY=1;exitDx=0;exitDy=0;entryX=0.25;entryY=0;entryDx=0;entryDy=0;" target="Z-wsrpMU9JrykXgesedp-3">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="Z-wsrpMU9JrykXgesedp-8" connectable="0" parent="Z-wsrpMU9JrykXgesedp-6" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];inheritText=1;" value="zablokuj(powod)" vertex="1">
+                    <mxGeometry relative="1" x="-0.0765" y="1" as="geometry">
+                        <mxPoint x="10" y="-41" as="offset"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="Z-wsrpMU9JrykXgesedp-2" parent="1" style="html=1;align=center;verticalAlign=top;rounded=1;absoluteArcSize=1;arcSize=10;dashed=0;whiteSpace=wrap;" value="AKTYWNE" vertex="1">
+                    <mxGeometry height="40" width="140" x="275" y="350" as="geometry"/>
+                </mxCell>
+                <mxCell id="Z-wsrpMU9JrykXgesedp-7" edge="1" parent="1" source="Z-wsrpMU9JrykXgesedp-3" style="edgeStyle=orthogonalEdgeStyle;html=1;entryX=0.75;entryY=1;entryDx=0;entryDy=0;exitX=0.75;exitY=0;exitDx=0;exitDy=0;" target="Z-wsrpMU9JrykXgesedp-2">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="Z-wsrpMU9JrykXgesedp-9" connectable="0" parent="Z-wsrpMU9JrykXgesedp-7" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];inheritText=1;" value="odblokuj()" vertex="1">
+                    <mxGeometry relative="1" x="0.0457" y="1" as="geometry">
+                        <mxPoint x="18" y="39" as="offset"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="Z-wsrpMU9JrykXgesedp-3" parent="1" style="html=1;align=center;verticalAlign=top;rounded=1;absoluteArcSize=1;arcSize=10;dashed=0;whiteSpace=wrap;" value="ZABLOKOWANE&lt;hr&gt;entry /&amp;nbsp;&lt;span style=&quot;color: rgb(63, 63, 63); background-color: transparent;&quot;&gt;IKontoListener.naKontoZablokowane(id)&lt;/span&gt;&lt;div&gt;entry / IKonta.zakoncz(sesje konta)&lt;br&gt;&lt;div&gt;&lt;br&gt;&lt;/div&gt;&lt;/div&gt;" vertex="1">
+                    <mxGeometry height="70" width="265" x="212.5" y="510" as="geometry"/>
+                </mxCell>
+            </root>
+        </mxGraphModel>
+    </diagram>
+</mxfile>
