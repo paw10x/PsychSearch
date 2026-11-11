@@ -1,0 +1,882 @@
+#%RAML 1.0
+title: PsychSearch API
+version: v1
+baseUri: https://api.psychsearch.example/api/{version}
+protocols: [HTTPS]
+mediaType: application/json
+description: |
+  API platformy PsychSearch. Wszystkie daty i godziny to LocalDateTime (czas lokalny Europe/Warsaw, bez strefy i offsetu).
+  Błędy są zwracane jako application/problem+json (typ Blad). Odpowiedź 500 jest zawsze rejestrowana przez serwer jako ProblemTechniczny.
+  Operacje chronione wymagają nagłówka Authorization: Bearer <Sesja.token>. Po zablokowaniu konta jego sesje są kończone (401).
+
+annotationTypes:
+  wrazliwe:
+    description: Pole zawiera dane wrażliwe, wartość opisuje zasady ujawniania.
+    type: string
+    allowedTargets: TypeDeclaration
+
+securitySchemes:
+  bearer:
+    description: Nieprzezroczysty token sesji (256 bitów, base64url), przechowywany po stronie serwera i unieważnialny.
+    type: Pass Through
+    describedBy:
+      headers:
+        Authorization:
+          description: "Bearer <token>"
+          type: string
+          pattern: '^Bearer [A-Za-z0-9_-]{43}$'
+      responses:
+        401:
+          description: Brak, nieważna, wygasła lub zakończona sesja.
+          body:
+            application/problem+json:
+              type: Blad
+
+types:
+  UUID:
+    type: string
+    pattern: '^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$'
+    description: Identyfikator UUID v4 generowany po stronie serwera.
+    example: 3f2b8c1e-5d4a-4e7b-9a10-2c6d8e0f1a23
+  DataCzas:
+    type: datetime-only
+    description: LocalDateTime, czas lokalny Europe/Warsaw, ISO 8601 bez strefy.
+    example: 2026-11-20T14:00:00
+  Email:
+    type: string
+    minLength: 5
+    maxLength: 254
+    pattern: '^[^@\s]+@[^@\s]+\.[^@\s]+$'
+    example: anna.nowak@example.com
+  Haslo:
+    type: string
+    minLength: 12
+    maxLength: 128
+    pattern: '^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^A-Za-z0-9]).{12,128}$'
+    description: |
+      Polityka hasła: 12 do 128 znaków, co najmniej jedna mała litera, wielka litera, cyfra i znak specjalny.
+      Hasło występuje wyłącznie w żądaniach. Serwer przechowuje tylko hasloHash (Argon2id z solą), nigdy go nie zwraca.
+    (wrazliwe): tylko w żądaniu, nigdy w odpowiedzi
+    example: 'Bezpieczne#Haslo2026'
+  Rola:
+    type: string
+    enum: [uzytkownik, psycholog, administrator]
+  StatusKonta:
+    type: string
+    enum: [aktywne, zablokowane]
+  StatusProfilu:
+    type: string
+    enum: [oczekuje, zweryfikowany, odrzucony]
+  StatusTerminu:
+    type: string
+    enum: [wolny, zarezerwowany]
+  StatusKonsultacji:
+    type: string
+    enum: [oczekujaca, zaakceptowana, odrzucona, anulowana]
+  Specjalizacja:
+    type: string
+    minLength: 2
+    maxLength: 100
+    example: terapia poznawczo-behawioralna
+  Imie:
+    type: string
+    minLength: 1
+    maxLength: 100
+  Nazwisko:
+    type: string
+    minLength: 1
+    maxLength: 100
+
+  DaneRejestracyjne:
+    description: Rejestracja użytkownika lub psychologa. Rola administrator jest niedozwolona (patrz /administratorzy).
+    type: object
+    properties:
+      email: Email
+      haslo: Haslo
+      imie: Imie
+      nazwisko: Nazwisko
+      rola:
+        type: string
+        enum: [uzytkownik, psycholog]
+  DaneRejestracyjneAdministratora:
+    type: object
+    properties:
+      email: Email
+      haslo: Haslo
+      imie: Imie
+      nazwisko: Nazwisko
+  DaneLogowania:
+    type: object
+    properties:
+      email: Email
+      haslo:
+        type: string
+        minLength: 1
+        maxLength: 128
+        (wrazliwe): tylko w żądaniu, nigdy w odpowiedzi
+  Sesja:
+    type: object
+    properties:
+      token:
+        type: string
+        pattern: '^[A-Za-z0-9_-]{43}$'
+        (wrazliwe): zwracany tylko raz, w odpowiedzi na logowanie
+      kontoId: UUID
+      rola: Rola
+      wygasa: DataCzas
+  Konto:
+    description: Reprezentacja konta. Pole hasloHash nigdy nie jest zwracane.
+    type: object
+    properties:
+      id: UUID
+      email:
+        type: Email
+        (wrazliwe): widoczny tylko dla właściciela konta i administratora
+      imie: Imie
+      nazwisko: Nazwisko
+      rola: Rola
+      status: StatusKonta
+      powodBlokady:
+        type: string
+        maxLength: 500
+        required: false
+        description: Obecny tylko dla kont zablokowanych. Widoczny dla właściciela konta i administratora.
+  BlokadaKonta:
+    type: object
+    properties:
+      powod:
+        type: string
+        minLength: 3
+        maxLength: 500
+  OsobaSkrot:
+    type: object
+    properties:
+      id: UUID
+      imie: Imie
+      nazwisko: Nazwisko
+
+  ProfilPsychologa:
+    type: object
+    properties:
+      specjalizacje:
+        type: Specjalizacja[]
+        uniqueItems: true
+        maxItems: 20
+      kwalifikacje:
+        type: string
+        maxLength: 5000
+      status: StatusProfilu
+  AktualizacjaProfilu:
+    description: Pełna zamiana specjalizacji i kwalifikacji. Zmiana ustawia status profilu na oczekuje (ponowna weryfikacja).
+    type: object
+    properties:
+      specjalizacje:
+        type: Specjalizacja[]
+        uniqueItems: true
+        maxItems: 20
+      kwalifikacje:
+        type: string
+        maxLength: 5000
+  Psycholog:
+    type: object
+    properties:
+      id: UUID
+      imie: Imie
+      nazwisko: Nazwisko
+      email:
+        type: Email
+        required: false
+        (wrazliwe): zwracany tylko administratorowi i właścicielowi profilu
+      profil: ProfilPsychologa
+  WeryfikacjaProfilu:
+    type: object
+    properties:
+      decyzja:
+        type: string
+        enum: [zatwierdz, odrzuc]
+
+  Termin:
+    type: object
+    properties:
+      id: UUID
+      start: DataCzas
+      koniec: DataCzas
+      status: StatusTerminu
+  NowyTermin:
+    description: start musi być wcześniejszy niż koniec i leżeć w przyszłości.
+    type: object
+    properties:
+      start: DataCzas
+      koniec: DataCzas
+
+  Konsultacja:
+    type: object
+    properties:
+      id: UUID
+      utworzona: DataCzas
+      status: StatusKonsultacji
+      uzytkownik: OsobaSkrot
+      psycholog: OsobaSkrot
+      termin: Termin
+  NowaProsba:
+    type: object
+    properties:
+      psychologId: UUID
+      terminId: UUID
+
+  Powiadomienie:
+    description: Treść zawiera minimum danych (bez opisów problemów i danych wrażliwych).
+    type: object
+    properties:
+      id: UUID
+      tresc:
+        type: string
+        maxLength: 500
+      dataWyslania: DataCzas
+      przeczytane: boolean
+      konsultacjaId:
+        type: UUID
+        required: false
+
+  ProblemTechniczny:
+    type: object
+    properties:
+      id: UUID
+      opis:
+        type: string
+        maxLength: 4000
+      zrodlo:
+        type: string
+        maxLength: 200
+      wykryty: DataCzas
+      rozwiazany: boolean
+      opisRozwiazania:
+        type: string
+        maxLength: 4000
+        required: false
+  RozwiazanieProblemu:
+    type: object
+    properties:
+      opis:
+        type: string
+        minLength: 3
+        maxLength: 4000
+
+  Blad:
+    description: Format RFC 7807 (application/problem+json).
+    type: object
+    properties:
+      type: string
+      title: string
+      status:
+        type: integer
+        minimum: 400
+        maximum: 599
+      detail:
+        type: string
+        required: false
+      instance:
+        type: string
+        required: false
+      bledy:
+        required: false
+        type: array
+        items:
+          type: object
+          properties:
+            pole: string
+            komunikat: string
+  BladBlokady:
+    type: Blad
+    properties:
+      powodBlokady: string
+
+  Strona:
+    type: object
+    properties:
+      numer:
+        type: integer
+        minimum: 0
+      rozmiar:
+        type: integer
+        minimum: 1
+        maximum: 100
+      lacznieElementow: integer
+      lacznieStron: integer
+  KontaStrona:
+    type: Strona
+    properties:
+      elementy: Konto[]
+  PsychologowieStrona:
+    type: Strona
+    properties:
+      elementy: Psycholog[]
+  KonsultacjeStrona:
+    type: Strona
+    properties:
+      elementy: Konsultacja[]
+  PowiadomieniaStrona:
+    type: Strona
+    properties:
+      elementy: Powiadomienie[]
+  ProblemyStrona:
+    type: Strona
+    properties:
+      elementy: ProblemTechniczny[]
+
+traits:
+  serwer:
+    responses:
+      500:
+        description: Błąd serwera, zarejestrowany jako ProblemTechniczny.
+        body:
+          application/problem+json:
+            type: Blad
+  standardowe:
+    responses:
+      401:
+        description: Brak, nieważna, wygasła lub zakończona sesja.
+        body:
+          application/problem+json:
+            type: Blad
+      403:
+        description: Rola wywołującego nie ma uprawnień do operacji.
+        body:
+          application/problem+json:
+            type: Blad
+      500:
+        description: Błąd serwera, zarejestrowany jako ProblemTechniczny.
+        body:
+          application/problem+json:
+            type: Blad
+  walidacja:
+    responses:
+      422:
+        description: Dane nie przechodzą walidacji.
+        body:
+          application/problem+json:
+            type: Blad
+  nieznaleziono:
+    responses:
+      404:
+        description: Zasób nie istnieje lub nie jest dostępny dla wywołującego.
+        body:
+          application/problem+json:
+            type: Blad
+  konflikt:
+    responses:
+      409:
+        description: Konflikt ze stanem zasobu.
+        body:
+          application/problem+json:
+            type: Blad
+  paginowane:
+    queryParameters:
+      page:
+        type: integer
+        minimum: 0
+        default: 0
+        required: false
+      size:
+        type: integer
+        minimum: 1
+        maximum: 100
+        default: 20
+        required: false
+
+/konta:
+  post:
+    description: Zakładanie konta użytkownika lub psychologa. Konto jest aktywne od razu. Konto psychologa ma profil o statusie oczekuje.
+    securedBy: [null]
+    is: [serwer, walidacja, konflikt]
+    body:
+      application/json:
+        type: DaneRejestracyjne
+    responses:
+      201:
+        headers:
+          Location:
+            type: string
+        body:
+          application/json:
+            type: Konto
+      409:
+        description: Konto z podanym adresem e-mail już istnieje.
+  get:
+    description: Lista kont (administrator).
+    securedBy: [bearer]
+    is: [standardowe, paginowane]
+    queryParameters:
+      rola:
+        type: Rola
+        required: false
+      status:
+        type: StatusKonta
+        required: false
+      szukaj:
+        description: Fragment adresu e-mail, imienia lub nazwiska.
+        type: string
+        maxLength: 100
+        required: false
+    responses:
+      200:
+        body:
+          application/json:
+            type: KontaStrona
+  /biezace:
+    get:
+      description: Konto zalogowanego wywołującego (każda rola).
+      securedBy: [bearer]
+      is: [standardowe]
+      responses:
+        200:
+          body:
+            application/json:
+              type: Konto
+  /{kontoId}:
+    uriParameters:
+      kontoId: UUID
+    get:
+      description: Szczegóły konta (administrator).
+      securedBy: [bearer]
+      is: [standardowe, nieznaleziono]
+      responses:
+        200:
+          body:
+            application/json:
+              type: Konto
+    /blokada:
+      post:
+        description: Blokowanie konta (administrator). Kończy sesje konta i anuluje jego oczekujące oraz zaakceptowane konsultacje (bez limitu czasu), a druga strona jest powiadamiana.
+        securedBy: [bearer]
+        is: [standardowe, walidacja, nieznaleziono, konflikt]
+        body:
+          application/json:
+            type: BlokadaKonta
+        responses:
+          200:
+            body:
+              application/json:
+                type: Konto
+          409:
+            description: Konto jest już zablokowane albo administrator blokuje własne konto.
+      delete:
+        description: Odblokowanie konta (administrator).
+        securedBy: [bearer]
+        is: [standardowe, nieznaleziono, konflikt]
+        responses:
+          200:
+            body:
+              application/json:
+                type: Konto
+          409:
+            description: Konto nie jest zablokowane.
+
+/administratorzy:
+  post:
+    description: Tworzenie konta administratora (tylko administrator). Pierwsze konto powstaje poza API.
+    securedBy: [bearer]
+    is: [standardowe, walidacja, konflikt]
+    body:
+      application/json:
+        type: DaneRejestracyjneAdministratora
+    responses:
+      201:
+        headers:
+          Location:
+            type: string
+        body:
+          application/json:
+            type: Konto
+      409:
+        description: Konto z podanym adresem e-mail już istnieje.
+
+/sesje:
+  post:
+    description: |
+      Logowanie. Limit prób: 5 nieudanych w 15 minut dla pary e-mail + adres IP, potem 429.
+      Odpowiedź 401 ma zawsze ogólny komunikat, nie ujawnia czy e-mail istnieje.
+    securedBy: [null]
+    is: [serwer, walidacja]
+    body:
+      application/json:
+        type: DaneLogowania
+    responses:
+      201:
+        body:
+          application/json:
+            type: Sesja
+      401:
+        description: Nieprawidłowe dane logowania.
+        body:
+          application/problem+json:
+            type: Blad
+      403:
+        description: Konto zablokowane (zwracany powód blokady, tylko po podaniu poprawnego hasła).
+        body:
+          application/problem+json:
+            type: BladBlokady
+      429:
+        description: Przekroczony limit prób logowania.
+        headers:
+          Retry-After:
+            description: Liczba sekund do następnej dozwolonej próby.
+            type: integer
+        body:
+          application/problem+json:
+            type: Blad
+  /biezaca:
+    delete:
+      description: Wylogowanie, unieważnia bieżącą sesję po stronie serwera.
+      securedBy: [bearer]
+      is: [standardowe]
+      responses:
+        204:
+
+/psychologowie:
+  get:
+    description: Lista zweryfikowanych psychologów (użytkownik, administrator).
+    securedBy: [bearer]
+    is: [standardowe, paginowane]
+    queryParameters:
+      specjalizacja:
+        type: Specjalizacja
+        required: false
+      szukaj:
+        description: Fragment imienia lub nazwiska.
+        type: string
+        maxLength: 100
+        required: false
+    responses:
+      200:
+        body:
+          application/json:
+            type: PsychologowieStrona
+  /{psychologId}:
+    uriParameters:
+      psychologId: UUID
+    get:
+      description: Profil psychologa. Użytkownik widzi tylko profile zweryfikowane, administrator wszystkie.
+      securedBy: [bearer]
+      is: [standardowe, nieznaleziono]
+      responses:
+        200:
+          body:
+            application/json:
+              type: Psycholog
+    /terminy:
+      get:
+        description: Wolne terminy psychologa (użytkownik).
+        securedBy: [bearer]
+        is: [standardowe, nieznaleziono]
+        queryParameters:
+          od:
+            type: DataCzas
+            required: false
+          do:
+            type: DataCzas
+            required: false
+        responses:
+          200:
+            body:
+              application/json:
+                type: Termin[]
+    /weryfikacja:
+      post:
+        description: |
+          Decyzja o profilu (administrator). Zatwierdzenie wymaga kompletnych danych (czyKompletny), inaczej 422 i profil pozostaje w stanie oczekuje.
+          Zatwierdzony profil jest publikowany w katalogu, odrzucony nie.
+        securedBy: [bearer]
+        is: [standardowe, walidacja, nieznaleziono, konflikt]
+        body:
+          application/json:
+            type: WeryfikacjaProfilu
+        responses:
+          200:
+            body:
+              application/json:
+                type: ProfilPsychologa
+          409:
+            description: Profil nie oczekuje na weryfikację.
+          422:
+            description: Brak wymaganych danych w profilu.
+
+/profile-oczekujace:
+  get:
+    description: Profile oczekujące na weryfikację (administrator).
+    securedBy: [bearer]
+    is: [standardowe, paginowane]
+    responses:
+      200:
+        body:
+          application/json:
+            type: PsychologowieStrona
+
+/profil:
+  get:
+    description: Własny profil i status weryfikacji (psycholog).
+    securedBy: [bearer]
+    is: [standardowe]
+    responses:
+      200:
+        body:
+          application/json:
+            type: ProfilPsychologa
+  put:
+    description: Zmiana specjalizacji i kwalifikacji (psycholog). Status profilu wraca do oczekuje.
+    securedBy: [bearer]
+    is: [standardowe, walidacja]
+    body:
+      application/json:
+        type: AktualizacjaProfilu
+    responses:
+      200:
+        body:
+          application/json:
+            type: ProfilPsychologa
+
+/terminy:
+  get:
+    description: Własny harmonogram, wolne i zajęte terminy (psycholog).
+    securedBy: [bearer]
+    is: [standardowe]
+    queryParameters:
+      status:
+        type: StatusTerminu
+        required: false
+      od:
+        type: DataCzas
+        required: false
+      do:
+        type: DataCzas
+        required: false
+    responses:
+      200:
+        body:
+          application/json:
+            type: Termin[]
+  post:
+    description: Dodanie wolnego terminu (psycholog).
+    securedBy: [bearer]
+    is: [standardowe, walidacja, konflikt]
+    body:
+      application/json:
+        type: NowyTermin
+    responses:
+      201:
+        headers:
+          Location:
+            type: string
+          ETag:
+            type: string
+        body:
+          application/json:
+            type: Termin
+      409:
+        description: Termin koliduje z istniejącym terminem lub wizytą.
+  /{terminId}:
+    uriParameters:
+      terminId: UUID
+    put:
+      description: Edycja wolnego terminu (psycholog). Oczekujące prośby o ten termin są anulowane, a użytkownicy powiadamiani.
+      securedBy: [bearer]
+      is: [standardowe, walidacja, nieznaleziono, konflikt]
+      headers:
+        If-Match:
+          description: Wersja terminu z ETag (kontrola współbieżności).
+          type: string
+          required: false
+      body:
+        application/json:
+          type: NowyTermin
+      responses:
+        200:
+          headers:
+            ETag:
+              type: string
+          body:
+            application/json:
+              type: Termin
+        409:
+          description: Termin zarezerwowany lub kolizja z innym terminem.
+        412:
+          description: Nieaktualna wersja terminu (If-Match).
+          body:
+            application/problem+json:
+              type: Blad
+    delete:
+      description: Usunięcie wolnego terminu (psycholog). Oczekujące prośby o ten termin są anulowane, a użytkownicy powiadamiani.
+      securedBy: [bearer]
+      is: [standardowe, nieznaleziono, konflikt]
+      headers:
+        If-Match:
+          type: string
+          required: false
+      responses:
+        204:
+        409:
+          description: Termin jest zarezerwowany.
+        412:
+          description: Nieaktualna wersja terminu (If-Match).
+          body:
+            application/problem+json:
+              type: Blad
+
+/konsultacje:
+  post:
+    description: Wysłanie prośby o konsultację (użytkownik). Prośba ma status oczekujaca, termin nie jest jeszcze rezerwowany.
+    securedBy: [bearer]
+    is: [standardowe, walidacja, nieznaleziono, konflikt]
+    headers:
+      Idempotency-Key:
+        description: Powtórzenie klucza zwraca tę samą konsultację (200) zamiast tworzyć kolejną.
+        type: UUID
+        required: false
+    body:
+      application/json:
+        type: NowaProsba
+    responses:
+      200:
+        description: Powtórzone żądanie z tym samym Idempotency-Key.
+        body:
+          application/json:
+            type: Konsultacja
+      201:
+        headers:
+          Location:
+            type: string
+        body:
+          application/json:
+            type: Konsultacja
+      409:
+        description: Termin jest niedostępny.
+  get:
+    description: Konsultacje użytkownika albo prośby skierowane do psychologa, zależnie od roli wywołującego.
+    securedBy: [bearer]
+    is: [standardowe, paginowane]
+    queryParameters:
+      status:
+        type: StatusKonsultacji
+        required: false
+    responses:
+      200:
+        body:
+          application/json:
+            type: KonsultacjeStrona
+  /{konsultacjaId}:
+    uriParameters:
+      konsultacjaId: UUID
+    get:
+      description: Szczegóły konsultacji (jej uczestnik).
+      securedBy: [bearer]
+      is: [standardowe, nieznaleziono]
+      responses:
+        200:
+          body:
+            application/json:
+              type: Konsultacja
+    /akceptacja:
+      post:
+        description: Akceptacja prośby (psycholog adresat). Rezerwuje termin i powiadamia użytkownika.
+        securedBy: [bearer]
+        is: [standardowe, nieznaleziono, konflikt]
+        responses:
+          200:
+            body:
+              application/json:
+                type: Konsultacja
+          409:
+            description: Prośba nie ma statusu oczekujaca (np. anulowana) albo termin jest już zajęty.
+    /odrzucenie:
+      post:
+        description: Odrzucenie prośby (psycholog adresat). Powiadamia użytkownika.
+        securedBy: [bearer]
+        is: [standardowe, nieznaleziono, konflikt]
+        responses:
+          200:
+            body:
+              application/json:
+                type: Konsultacja
+          409:
+            description: Prośba nie ma statusu oczekujaca.
+    /anulowanie:
+      post:
+        description: Anulowanie prośby lub wizyty (użytkownik właściciel). Dla zaakceptowanej wizyty obowiązuje konfigurowalny limit czasu, termin jest zwalniany, a psycholog powiadamiany.
+        securedBy: [bearer]
+        is: [standardowe, nieznaleziono, konflikt]
+        responses:
+          200:
+            body:
+              application/json:
+                type: Konsultacja
+          409:
+            description: Status nie pozwala na anulowanie albo przekroczono dozwolony czas anulowania.
+
+/powiadomienia:
+  get:
+    description: Powiadomienia zalogowanego konta (użytkownik, psycholog).
+    securedBy: [bearer]
+    is: [standardowe, paginowane]
+    queryParameters:
+      przeczytane:
+        type: boolean
+        required: false
+    responses:
+      200:
+        body:
+          application/json:
+            type: PowiadomieniaStrona
+  /{powiadomienieId}/przeczytane:
+    uriParameters:
+      powiadomienieId: UUID
+    post:
+      description: Oznaczenie powiadomienia jako przeczytane (właściciel).
+      securedBy: [bearer]
+      is: [standardowe, nieznaleziono]
+      responses:
+        200:
+          body:
+            application/json:
+              type: Powiadomienie
+
+/problemy:
+  get:
+    description: Zarejestrowane problemy techniczne (administrator).
+    securedBy: [bearer]
+    is: [standardowe, paginowane]
+    queryParameters:
+      rozwiazany:
+        type: boolean
+        required: false
+    responses:
+      200:
+        body:
+          application/json:
+            type: ProblemyStrona
+  /{problemId}:
+    uriParameters:
+      problemId: UUID
+    get:
+      description: Szczegóły problemu technicznego (administrator).
+      securedBy: [bearer]
+      is: [standardowe, nieznaleziono]
+      responses:
+        200:
+          body:
+            application/json:
+              type: ProblemTechniczny
+    /rozwiazanie:
+      post:
+        description: Oznaczenie problemu jako rozwiązanego wraz z opisem rozwiązania (administrator).
+        securedBy: [bearer]
+        is: [standardowe, walidacja, nieznaleziono, konflikt]
+        body:
+          application/json:
+            type: RozwiazanieProblemu
+        responses:
+          200:
+            body:
+              application/json:
+                type: ProblemTechniczny
+          409:
+            description: Problem jest już rozwiązany.
