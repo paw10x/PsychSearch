@@ -9,6 +9,12 @@ description: |
   Błędy są zwracane jako application/problem+json (typ Blad). Odpowiedź 500 jest zawsze rejestrowana przez serwer jako ProblemTechniczny.
   Operacje chronione wymagają nagłówka Authorization: Bearer <Sesja.token>. Po zablokowaniu konta jego sesje są kończone (401).
 
+  Identyfikatory w przykładach (spójne w całym pliku):
+  użytkownik a1b2c3d4-1111-4aaa-8bbb-000000000001, psycholog a1b2c3d4-2222-4aaa-8bbb-000000000002,
+  administrator a1b2c3d4-3333-4aaa-8bbb-000000000003, termin a1b2c3d4-4444-4aaa-8bbb-000000000004,
+  konsultacja a1b2c3d4-5555-4aaa-8bbb-000000000005, powiadomienie a1b2c3d4-6666-4aaa-8bbb-000000000006,
+  problem a1b2c3d4-7777-4aaa-8bbb-000000000007.
+
 annotationTypes:
   wrazliwe:
     description: Pole zawiera dane wrażliwe, wartość opisuje zasady ujawniania.
@@ -25,23 +31,30 @@ securitySchemes:
           description: "Bearer <token>"
           type: string
           pattern: '^Bearer [A-Za-z0-9_-]{43}$'
+          example: 'Bearer Zk3vQ8mXr1TnB7cYp2LwA9sEd4HuJ6oGf0KiN5tRx_M'
       responses:
         401:
           description: Brak, nieważna, wygasła lub zakończona sesja.
           body:
             application/problem+json:
               type: Blad
+              example:
+                type: https://api.psychsearch.example/bledy/brak-autoryzacji
+                title: Brak autoryzacji
+                status: 401
+                detail: Sesja jest nieważna, wygasła lub została zakończona.
+                instance: /api/v1/profil
 
 types:
   UUID:
     type: string
     pattern: '^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$'
     description: Identyfikator UUID v4 generowany po stronie serwera.
-    example: 3f2b8c1e-5d4a-4e7b-9a10-2c6d8e0f1a23
+    example: a1b2c3d4-1111-4aaa-8bbb-000000000001
   DataCzas:
     type: datetime-only
     description: LocalDateTime, czas lokalny Europe/Warsaw, ISO 8601 bez strefy.
-    example: 2026-11-20T14:00:00
+    example: "2026-11-20T14:00:00"
   Email:
     type: string
     minLength: 5
@@ -82,10 +95,12 @@ types:
     type: string
     minLength: 1
     maxLength: 100
+    example: Anna
   Nazwisko:
     type: string
     minLength: 1
     maxLength: 100
+    example: Nowak
 
   DaneRejestracyjne:
     description: Rejestracja użytkownika lub psychologa. Rola administrator jest niedozwolona (patrz /administratorzy).
@@ -332,6 +347,12 @@ traits:
         body:
           application/problem+json:
             type: Blad
+            example:
+              type: https://api.psychsearch.example/bledy/blad-serwera
+              title: Błąd serwera
+              status: 500
+              detail: Operacja nie powiodła się. Błąd został zarejestrowany.
+              instance: /api/v1/konta
   standardowe:
     responses:
       401:
@@ -339,16 +360,34 @@ traits:
         body:
           application/problem+json:
             type: Blad
+            example:
+              type: https://api.psychsearch.example/bledy/brak-autoryzacji
+              title: Brak autoryzacji
+              status: 401
+              detail: Sesja jest nieważna, wygasła lub została zakończona.
+              instance: /api/v1/profil
       403:
         description: Rola wywołującego nie ma uprawnień do operacji.
         body:
           application/problem+json:
             type: Blad
+            example:
+              type: https://api.psychsearch.example/bledy/brak-uprawnien
+              title: Brak uprawnień
+              status: 403
+              detail: Rola uzytkownik nie ma dostępu do tej operacji.
+              instance: /api/v1/problemy
       500:
         description: Błąd serwera, zarejestrowany jako ProblemTechniczny.
         body:
           application/problem+json:
             type: Blad
+            example:
+              type: https://api.psychsearch.example/bledy/blad-serwera
+              title: Błąd serwera
+              status: 500
+              detail: Operacja nie powiodła się. Błąd został zarejestrowany.
+              instance: /api/v1/konsultacje
   walidacja:
     responses:
       422:
@@ -356,6 +395,15 @@ traits:
         body:
           application/problem+json:
             type: Blad
+            example:
+              type: https://api.psychsearch.example/bledy/walidacja
+              title: Błąd walidacji
+              status: 422
+              detail: Dane nie przechodzą walidacji.
+              instance: /api/v1/konta
+              bledy:
+                - pole: haslo
+                  komunikat: Hasło musi mieć co najmniej 12 znaków, małą i wielką literę, cyfrę oraz znak specjalny.
   nieznaleziono:
     responses:
       404:
@@ -363,6 +411,12 @@ traits:
         body:
           application/problem+json:
             type: Blad
+            example:
+              type: https://api.psychsearch.example/bledy/nie-znaleziono
+              title: Nie znaleziono
+              status: 404
+              detail: Zasób nie istnieje lub jest niedostępny.
+              instance: /api/v1/konsultacje/a1b2c3d4-5555-4aaa-8bbb-000000000005
   konflikt:
     responses:
       409:
@@ -370,6 +424,12 @@ traits:
         body:
           application/problem+json:
             type: Blad
+            example:
+              type: https://api.psychsearch.example/bledy/konflikt
+              title: Konflikt
+              status: 409
+              detail: Operacja jest niezgodna z aktualnym stanem zasobu.
+              instance: /api/v1/konsultacje
   paginowane:
     queryParameters:
       page:
@@ -377,12 +437,14 @@ traits:
         minimum: 0
         default: 0
         required: false
+        example: 0
       size:
         type: integer
         minimum: 1
         maximum: 100
         default: 20
         required: false
+        example: 20
 
 /konta:
   post:
@@ -392,16 +454,58 @@ traits:
     body:
       application/json:
         type: DaneRejestracyjne
+        examples:
+          uzytkownik:
+            value:
+              email: anna.nowak@example.com
+              haslo: 'Bezpieczne#Haslo2026'
+              imie: Anna
+              nazwisko: Nowak
+              rola: uzytkownik
+          psycholog:
+            value:
+              email: jan.kowalski@example.com
+              haslo: 'Gabinet!Terapia2026'
+              imie: Jan
+              nazwisko: Kowalski
+              rola: psycholog
     responses:
       201:
         headers:
           Location:
             type: string
+            example: /api/v1/konta/a1b2c3d4-1111-4aaa-8bbb-000000000001
         body:
           application/json:
             type: Konto
+            examples:
+              uzytkownik:
+                value:
+                  id: a1b2c3d4-1111-4aaa-8bbb-000000000001
+                  email: anna.nowak@example.com
+                  imie: Anna
+                  nazwisko: Nowak
+                  rola: uzytkownik
+                  status: aktywne
+              psycholog:
+                value:
+                  id: a1b2c3d4-2222-4aaa-8bbb-000000000002
+                  email: jan.kowalski@example.com
+                  imie: Jan
+                  nazwisko: Kowalski
+                  rola: psycholog
+                  status: aktywne
       409:
         description: Konto z podanym adresem e-mail już istnieje.
+        body:
+          application/problem+json:
+            type: Blad
+            example:
+              type: https://api.psychsearch.example/bledy/email-zajety
+              title: Konflikt
+              status: 409
+              detail: Konto z podanym adresem e-mail już istnieje.
+              instance: /api/v1/konta
   get:
     description: Lista kont (administrator).
     securedBy: [bearer]
@@ -410,19 +514,41 @@ traits:
       rola:
         type: Rola
         required: false
+        example: psycholog
       status:
         type: StatusKonta
         required: false
+        example: zablokowane
       szukaj:
         description: Fragment adresu e-mail, imienia lub nazwiska.
         type: string
         maxLength: 100
         required: false
+        example: nowak
     responses:
       200:
         body:
           application/json:
             type: KontaStrona
+            example:
+              numer: 0
+              rozmiar: 20
+              lacznieElementow: 2
+              lacznieStron: 1
+              elementy:
+                - id: a1b2c3d4-1111-4aaa-8bbb-000000000001
+                  email: anna.nowak@example.com
+                  imie: Anna
+                  nazwisko: Nowak
+                  rola: uzytkownik
+                  status: aktywne
+                - id: a1b2c3d4-2222-4aaa-8bbb-000000000002
+                  email: jan.kowalski@example.com
+                  imie: Jan
+                  nazwisko: Kowalski
+                  rola: psycholog
+                  status: zablokowane
+                  powodBlokady: Naruszenie regulaminu platformy.
   /biezace:
     get:
       description: Konto zalogowanego wywołującego (każda rola).
@@ -433,6 +559,13 @@ traits:
           body:
             application/json:
               type: Konto
+              example:
+                id: a1b2c3d4-1111-4aaa-8bbb-000000000001
+                email: anna.nowak@example.com
+                imie: Anna
+                nazwisko: Nowak
+                rola: uzytkownik
+                status: aktywne
   /{kontoId}:
     uriParameters:
       kontoId: UUID
@@ -445,6 +578,14 @@ traits:
           body:
             application/json:
               type: Konto
+              example:
+                id: a1b2c3d4-2222-4aaa-8bbb-000000000002
+                email: jan.kowalski@example.com
+                imie: Jan
+                nazwisko: Kowalski
+                rola: psycholog
+                status: zablokowane
+                powodBlokady: Naruszenie regulaminu platformy.
     /blokada:
       post:
         description: Blokowanie konta (administrator). Kończy sesje konta i anuluje jego oczekujące oraz zaakceptowane konsultacje (bez limitu czasu), a druga strona jest powiadamiana.
@@ -453,13 +594,32 @@ traits:
         body:
           application/json:
             type: BlokadaKonta
+            example:
+              powod: Naruszenie regulaminu platformy.
         responses:
           200:
             body:
               application/json:
                 type: Konto
+                example:
+                  id: a1b2c3d4-2222-4aaa-8bbb-000000000002
+                  email: jan.kowalski@example.com
+                  imie: Jan
+                  nazwisko: Kowalski
+                  rola: psycholog
+                  status: zablokowane
+                  powodBlokady: Naruszenie regulaminu platformy.
           409:
             description: Konto jest już zablokowane albo administrator blokuje własne konto.
+            body:
+              application/problem+json:
+                type: Blad
+                example:
+                  type: https://api.psychsearch.example/bledy/konflikt
+                  title: Konflikt
+                  status: 409
+                  detail: Konto jest już zablokowane.
+                  instance: /api/v1/konta/a1b2c3d4-2222-4aaa-8bbb-000000000002/blokada
       delete:
         description: Odblokowanie konta (administrator).
         securedBy: [bearer]
@@ -469,8 +629,24 @@ traits:
             body:
               application/json:
                 type: Konto
+                example:
+                  id: a1b2c3d4-2222-4aaa-8bbb-000000000002
+                  email: jan.kowalski@example.com
+                  imie: Jan
+                  nazwisko: Kowalski
+                  rola: psycholog
+                  status: aktywne
           409:
             description: Konto nie jest zablokowane.
+            body:
+              application/problem+json:
+                type: Blad
+                example:
+                  type: https://api.psychsearch.example/bledy/konflikt
+                  title: Konflikt
+                  status: 409
+                  detail: Konto nie jest zablokowane.
+                  instance: /api/v1/konta/a1b2c3d4-2222-4aaa-8bbb-000000000002/blokada
 
 /administratorzy:
   post:
@@ -480,16 +656,38 @@ traits:
     body:
       application/json:
         type: DaneRejestracyjneAdministratora
+        example:
+          email: ewa.admin@example.com
+          haslo: 'Panel#Admin2026zx'
+          imie: Ewa
+          nazwisko: Wiśniewska
     responses:
       201:
         headers:
           Location:
             type: string
+            example: /api/v1/konta/a1b2c3d4-3333-4aaa-8bbb-000000000003
         body:
           application/json:
             type: Konto
+            example:
+              id: a1b2c3d4-3333-4aaa-8bbb-000000000003
+              email: ewa.admin@example.com
+              imie: Ewa
+              nazwisko: Wiśniewska
+              rola: administrator
+              status: aktywne
       409:
         description: Konto z podanym adresem e-mail już istnieje.
+        body:
+          application/problem+json:
+            type: Blad
+            example:
+              type: https://api.psychsearch.example/bledy/email-zajety
+              title: Konflikt
+              status: 409
+              detail: Konto z podanym adresem e-mail już istnieje.
+              instance: /api/v1/administratorzy
 
 /sesje:
   post:
@@ -501,30 +699,58 @@ traits:
     body:
       application/json:
         type: DaneLogowania
+        example:
+          email: anna.nowak@example.com
+          haslo: 'Bezpieczne#Haslo2026'
     responses:
       201:
         body:
           application/json:
             type: Sesja
+            example:
+              token: Zk3vQ8mXr1TnB7cYp2LwA9sEd4HuJ6oGf0KiN5tRx_M
+              kontoId: a1b2c3d4-1111-4aaa-8bbb-000000000001
+              rola: uzytkownik
+              wygasa: "2026-11-16T18:00:00"
       401:
         description: Nieprawidłowe dane logowania.
         body:
           application/problem+json:
             type: Blad
+            example:
+              type: https://api.psychsearch.example/bledy/nieprawidlowe-dane-logowania
+              title: Nieprawidłowe dane logowania
+              status: 401
+              detail: Nieprawidłowy adres e-mail lub hasło.
+              instance: /api/v1/sesje
       403:
         description: Konto zablokowane (zwracany powód blokady, tylko po podaniu poprawnego hasła).
         body:
           application/problem+json:
             type: BladBlokady
+            example:
+              type: https://api.psychsearch.example/bledy/konto-zablokowane
+              title: Konto zablokowane
+              status: 403
+              detail: Konto zostało zablokowane przez administratora.
+              instance: /api/v1/sesje
+              powodBlokady: Naruszenie regulaminu platformy.
       429:
         description: Przekroczony limit prób logowania.
         headers:
           Retry-After:
             description: Liczba sekund do następnej dozwolonej próby.
             type: integer
+            example: 840
         body:
           application/problem+json:
             type: Blad
+            example:
+              type: https://api.psychsearch.example/bledy/limit-prob
+              title: Przekroczony limit prób logowania
+              status: 429
+              detail: Spróbuj ponownie za 840 sekund.
+              instance: /api/v1/sesje
   /biezaca:
     delete:
       description: Wylogowanie, unieważnia bieżącą sesję po stronie serwera.
@@ -542,16 +768,31 @@ traits:
       specjalizacja:
         type: Specjalizacja
         required: false
+        example: terapia poznawczo-behawioralna
       szukaj:
         description: Fragment imienia lub nazwiska.
         type: string
         maxLength: 100
         required: false
+        example: kowal
     responses:
       200:
         body:
           application/json:
             type: PsychologowieStrona
+            example:
+              numer: 0
+              rozmiar: 20
+              lacznieElementow: 1
+              lacznieStron: 1
+              elementy:
+                - id: a1b2c3d4-2222-4aaa-8bbb-000000000002
+                  imie: Jan
+                  nazwisko: Kowalski
+                  profil:
+                    specjalizacje: [terapia poznawczo-behawioralna, terapia uzależnień]
+                    kwalifikacje: Magister psychologii (UW), certyfikat psychoterapeuty PTP.
+                    status: zweryfikowany
   /{psychologId}:
     uriParameters:
       psychologId: UUID
@@ -564,6 +805,26 @@ traits:
           body:
             application/json:
               type: Psycholog
+              examples:
+                uzytkownik:
+                  value:
+                    id: a1b2c3d4-2222-4aaa-8bbb-000000000002
+                    imie: Jan
+                    nazwisko: Kowalski
+                    profil:
+                      specjalizacje: [terapia poznawczo-behawioralna, terapia uzależnień]
+                      kwalifikacje: Magister psychologii (UW), certyfikat psychoterapeuty PTP.
+                      status: zweryfikowany
+                administrator:
+                  value:
+                    id: a1b2c3d4-2222-4aaa-8bbb-000000000002
+                    imie: Jan
+                    nazwisko: Kowalski
+                    email: jan.kowalski@example.com
+                    profil:
+                      specjalizacje: [terapia poznawczo-behawioralna]
+                      kwalifikacje: Magister psychologii (UW), certyfikat psychoterapeuty PTP.
+                      status: oczekuje
     /terminy:
       get:
         description: Wolne terminy psychologa (użytkownik).
@@ -573,14 +834,25 @@ traits:
           od:
             type: DataCzas
             required: false
+            example: "2026-11-17T00:00:00"
           do:
             type: DataCzas
             required: false
+            example: "2026-11-30T23:59:59"
         responses:
           200:
             body:
               application/json:
                 type: Termin[]
+                example:
+                  - id: a1b2c3d4-4444-4aaa-8bbb-000000000004
+                    start: "2026-11-20T14:00:00"
+                    koniec: "2026-11-20T15:00:00"
+                    status: wolny
+                  - id: a1b2c3d4-4444-4aaa-8bbb-000000000014
+                    start: "2026-11-21T10:00:00"
+                    koniec: "2026-11-21T11:00:00"
+                    status: wolny
     /weryfikacja:
       post:
         description: |
@@ -591,15 +863,54 @@ traits:
         body:
           application/json:
             type: WeryfikacjaProfilu
+            examples:
+              zatwierdzenie:
+                value:
+                  decyzja: zatwierdz
+              odrzucenie:
+                value:
+                  decyzja: odrzuc
         responses:
           200:
             body:
               application/json:
                 type: ProfilPsychologa
+                examples:
+                  zatwierdzony:
+                    value:
+                      specjalizacje: [terapia poznawczo-behawioralna]
+                      kwalifikacje: Magister psychologii (UW), certyfikat psychoterapeuty PTP.
+                      status: zweryfikowany
+                  odrzucony:
+                    value:
+                      specjalizacje: [terapia poznawczo-behawioralna]
+                      kwalifikacje: Magister psychologii (UW), certyfikat psychoterapeuty PTP.
+                      status: odrzucony
           409:
             description: Profil nie oczekuje na weryfikację.
+            body:
+              application/problem+json:
+                type: Blad
+                example:
+                  type: https://api.psychsearch.example/bledy/konflikt
+                  title: Konflikt
+                  status: 409
+                  detail: Profil nie oczekuje na weryfikację.
+                  instance: /api/v1/psychologowie/a1b2c3d4-2222-4aaa-8bbb-000000000002/weryfikacja
           422:
             description: Brak wymaganych danych w profilu.
+            body:
+              application/problem+json:
+                type: Blad
+                example:
+                  type: https://api.psychsearch.example/bledy/profil-niekompletny
+                  title: Profil niekompletny
+                  status: 422
+                  detail: Profil nie zawiera wymaganych danych, pozostaje w stanie oczekuje.
+                  instance: /api/v1/psychologowie/a1b2c3d4-2222-4aaa-8bbb-000000000002/weryfikacja
+                  bledy:
+                    - pole: kwalifikacje
+                      komunikat: Pole jest wymagane do zatwierdzenia profilu.
 
 /profile-oczekujace:
   get:
@@ -611,6 +922,20 @@ traits:
         body:
           application/json:
             type: PsychologowieStrona
+            example:
+              numer: 0
+              rozmiar: 20
+              lacznieElementow: 1
+              lacznieStron: 1
+              elementy:
+                - id: a1b2c3d4-2222-4aaa-8bbb-000000000002
+                  imie: Jan
+                  nazwisko: Kowalski
+                  email: jan.kowalski@example.com
+                  profil:
+                    specjalizacje: [terapia poznawczo-behawioralna]
+                    kwalifikacje: Magister psychologii (UW), certyfikat psychoterapeuty PTP.
+                    status: oczekuje
 
 /profil:
   get:
@@ -622,6 +947,10 @@ traits:
         body:
           application/json:
             type: ProfilPsychologa
+            example:
+              specjalizacje: [terapia poznawczo-behawioralna]
+              kwalifikacje: Magister psychologii (UW), certyfikat psychoterapeuty PTP.
+              status: zweryfikowany
   put:
     description: Zmiana specjalizacji i kwalifikacji (psycholog). Status profilu wraca do oczekuje.
     securedBy: [bearer]
@@ -629,11 +958,18 @@ traits:
     body:
       application/json:
         type: AktualizacjaProfilu
+        example:
+          specjalizacje: [terapia poznawczo-behawioralna, terapia uzależnień]
+          kwalifikacje: Magister psychologii (UW), certyfikat psychoterapeuty PTP, kurs interwencji kryzysowej.
     responses:
       200:
         body:
           application/json:
             type: ProfilPsychologa
+            example:
+              specjalizacje: [terapia poznawczo-behawioralna, terapia uzależnień]
+              kwalifikacje: Magister psychologii (UW), certyfikat psychoterapeuty PTP, kurs interwencji kryzysowej.
+              status: oczekuje
 
 /terminy:
   get:
@@ -644,17 +980,29 @@ traits:
       status:
         type: StatusTerminu
         required: false
+        example: wolny
       od:
         type: DataCzas
         required: false
+        example: "2026-11-17T00:00:00"
       do:
         type: DataCzas
         required: false
+        example: "2026-11-30T23:59:59"
     responses:
       200:
         body:
           application/json:
             type: Termin[]
+            example:
+              - id: a1b2c3d4-4444-4aaa-8bbb-000000000004
+                start: "2026-11-20T14:00:00"
+                koniec: "2026-11-20T15:00:00"
+                status: wolny
+              - id: a1b2c3d4-4444-4aaa-8bbb-000000000024
+                start: "2026-11-20T16:00:00"
+                koniec: "2026-11-20T17:00:00"
+                status: zarezerwowany
   post:
     description: Dodanie wolnego terminu (psycholog).
     securedBy: [bearer]
@@ -662,18 +1010,37 @@ traits:
     body:
       application/json:
         type: NowyTermin
+        example:
+          start: "2026-11-20T14:00:00"
+          koniec: "2026-11-20T15:00:00"
     responses:
       201:
         headers:
           Location:
             type: string
+            example: /api/v1/terminy/a1b2c3d4-4444-4aaa-8bbb-000000000004
           ETag:
             type: string
+            example: '"v1"'
         body:
           application/json:
             type: Termin
+            example:
+              id: a1b2c3d4-4444-4aaa-8bbb-000000000004
+              start: "2026-11-20T14:00:00"
+              koniec: "2026-11-20T15:00:00"
+              status: wolny
       409:
         description: Termin koliduje z istniejącym terminem lub wizytą.
+        body:
+          application/problem+json:
+            type: Blad
+            example:
+              type: https://api.psychsearch.example/bledy/kolizja-terminu
+              title: Kolizja terminu
+              status: 409
+              detail: Termin koliduje z istniejącym terminem lub wizytą.
+              instance: /api/v1/terminy
   /{terminId}:
     uriParameters:
       terminId: UUID
@@ -686,24 +1053,49 @@ traits:
           description: Wersja terminu z ETag (kontrola współbieżności).
           type: string
           required: false
+          example: '"v1"'
       body:
         application/json:
           type: NowyTermin
+          example:
+            start: "2026-11-20T15:00:00"
+            koniec: "2026-11-20T16:00:00"
       responses:
         200:
           headers:
             ETag:
               type: string
+              example: '"v2"'
           body:
             application/json:
               type: Termin
+              example:
+                id: a1b2c3d4-4444-4aaa-8bbb-000000000004
+                start: "2026-11-20T15:00:00"
+                koniec: "2026-11-20T16:00:00"
+                status: wolny
         409:
           description: Termin zarezerwowany lub kolizja z innym terminem.
+          body:
+            application/problem+json:
+              type: Blad
+              example:
+                type: https://api.psychsearch.example/bledy/termin-zarezerwowany
+                title: Termin zarezerwowany
+                status: 409
+                detail: Zarezerwowanego terminu nie można edytować.
+                instance: /api/v1/terminy/a1b2c3d4-4444-4aaa-8bbb-000000000004
         412:
           description: Nieaktualna wersja terminu (If-Match).
           body:
             application/problem+json:
               type: Blad
+              example:
+                type: https://api.psychsearch.example/bledy/nieaktualna-wersja
+                title: Nieaktualna wersja zasobu
+                status: 412
+                detail: Termin został zmieniony. Pobierz aktualną wersję i spróbuj ponownie.
+                instance: /api/v1/terminy/a1b2c3d4-4444-4aaa-8bbb-000000000004
     delete:
       description: Usunięcie wolnego terminu (psycholog). Oczekujące prośby o ten termin są anulowane, a użytkownicy powiadamiani.
       securedBy: [bearer]
@@ -712,15 +1104,31 @@ traits:
         If-Match:
           type: string
           required: false
+          example: '"v2"'
       responses:
         204:
         409:
           description: Termin jest zarezerwowany.
+          body:
+            application/problem+json:
+              type: Blad
+              example:
+                type: https://api.psychsearch.example/bledy/termin-zarezerwowany
+                title: Termin zarezerwowany
+                status: 409
+                detail: Zarezerwowanego terminu nie można usunąć.
+                instance: /api/v1/terminy/a1b2c3d4-4444-4aaa-8bbb-000000000004
         412:
           description: Nieaktualna wersja terminu (If-Match).
           body:
             application/problem+json:
               type: Blad
+              example:
+                type: https://api.psychsearch.example/bledy/nieaktualna-wersja
+                title: Nieaktualna wersja zasobu
+                status: 412
+                detail: Termin został zmieniony. Pobierz aktualną wersję i spróbuj ponownie.
+                instance: /api/v1/terminy/a1b2c3d4-4444-4aaa-8bbb-000000000004
 
 /konsultacje:
   post:
@@ -732,24 +1140,72 @@ traits:
         description: Powtórzenie klucza zwraca tę samą konsultację (200) zamiast tworzyć kolejną.
         type: UUID
         required: false
+        example: a1b2c3d4-8888-4aaa-8bbb-000000000008
     body:
       application/json:
         type: NowaProsba
+        example:
+          psychologId: a1b2c3d4-2222-4aaa-8bbb-000000000002
+          terminId: a1b2c3d4-4444-4aaa-8bbb-000000000004
     responses:
       200:
         description: Powtórzone żądanie z tym samym Idempotency-Key.
         body:
           application/json:
             type: Konsultacja
+            example:
+              id: a1b2c3d4-5555-4aaa-8bbb-000000000005
+              utworzona: "2026-11-16T12:30:00"
+              status: oczekujaca
+              uzytkownik:
+                id: a1b2c3d4-1111-4aaa-8bbb-000000000001
+                imie: Anna
+                nazwisko: Nowak
+              psycholog:
+                id: a1b2c3d4-2222-4aaa-8bbb-000000000002
+                imie: Jan
+                nazwisko: Kowalski
+              termin:
+                id: a1b2c3d4-4444-4aaa-8bbb-000000000004
+                start: "2026-11-20T14:00:00"
+                koniec: "2026-11-20T15:00:00"
+                status: wolny
       201:
         headers:
           Location:
             type: string
+            example: /api/v1/konsultacje/a1b2c3d4-5555-4aaa-8bbb-000000000005
         body:
           application/json:
             type: Konsultacja
+            example:
+              id: a1b2c3d4-5555-4aaa-8bbb-000000000005
+              utworzona: "2026-11-16T12:30:00"
+              status: oczekujaca
+              uzytkownik:
+                id: a1b2c3d4-1111-4aaa-8bbb-000000000001
+                imie: Anna
+                nazwisko: Nowak
+              psycholog:
+                id: a1b2c3d4-2222-4aaa-8bbb-000000000002
+                imie: Jan
+                nazwisko: Kowalski
+              termin:
+                id: a1b2c3d4-4444-4aaa-8bbb-000000000004
+                start: "2026-11-20T14:00:00"
+                koniec: "2026-11-20T15:00:00"
+                status: wolny
       409:
         description: Termin jest niedostępny.
+        body:
+          application/problem+json:
+            type: Blad
+            example:
+              type: https://api.psychsearch.example/bledy/termin-niedostepny
+              title: Termin niedostępny
+              status: 409
+              detail: Wybrany termin został już zarezerwowany. Wybierz inny termin.
+              instance: /api/v1/konsultacje
   get:
     description: Konsultacje użytkownika albo prośby skierowane do psychologa, zależnie od roli wywołującego.
     securedBy: [bearer]
@@ -758,11 +1214,34 @@ traits:
       status:
         type: StatusKonsultacji
         required: false
+        example: oczekujaca
     responses:
       200:
         body:
           application/json:
             type: KonsultacjeStrona
+            example:
+              numer: 0
+              rozmiar: 20
+              lacznieElementow: 1
+              lacznieStron: 1
+              elementy:
+                - id: a1b2c3d4-5555-4aaa-8bbb-000000000005
+                  utworzona: "2026-11-16T12:30:00"
+                  status: oczekujaca
+                  uzytkownik:
+                    id: a1b2c3d4-1111-4aaa-8bbb-000000000001
+                    imie: Anna
+                    nazwisko: Nowak
+                  psycholog:
+                    id: a1b2c3d4-2222-4aaa-8bbb-000000000002
+                    imie: Jan
+                    nazwisko: Kowalski
+                  termin:
+                    id: a1b2c3d4-4444-4aaa-8bbb-000000000004
+                    start: "2026-11-20T14:00:00"
+                    koniec: "2026-11-20T15:00:00"
+                    status: wolny
   /{konsultacjaId}:
     uriParameters:
       konsultacjaId: UUID
@@ -775,6 +1254,23 @@ traits:
           body:
             application/json:
               type: Konsultacja
+              example:
+                id: a1b2c3d4-5555-4aaa-8bbb-000000000005
+                utworzona: "2026-11-16T12:30:00"
+                status: oczekujaca
+                uzytkownik:
+                  id: a1b2c3d4-1111-4aaa-8bbb-000000000001
+                  imie: Anna
+                  nazwisko: Nowak
+                psycholog:
+                  id: a1b2c3d4-2222-4aaa-8bbb-000000000002
+                  imie: Jan
+                  nazwisko: Kowalski
+                termin:
+                  id: a1b2c3d4-4444-4aaa-8bbb-000000000004
+                  start: "2026-11-20T14:00:00"
+                  koniec: "2026-11-20T15:00:00"
+                  status: wolny
     /akceptacja:
       post:
         description: Akceptacja prośby (psycholog adresat). Rezerwuje termin i powiadamia użytkownika.
@@ -785,8 +1281,43 @@ traits:
             body:
               application/json:
                 type: Konsultacja
+                example:
+                  id: a1b2c3d4-5555-4aaa-8bbb-000000000005
+                  utworzona: "2026-11-16T12:30:00"
+                  status: zaakceptowana
+                  uzytkownik:
+                    id: a1b2c3d4-1111-4aaa-8bbb-000000000001
+                    imie: Anna
+                    nazwisko: Nowak
+                  psycholog:
+                    id: a1b2c3d4-2222-4aaa-8bbb-000000000002
+                    imie: Jan
+                    nazwisko: Kowalski
+                  termin:
+                    id: a1b2c3d4-4444-4aaa-8bbb-000000000004
+                    start: "2026-11-20T14:00:00"
+                    koniec: "2026-11-20T15:00:00"
+                    status: zarezerwowany
           409:
             description: Prośba nie ma statusu oczekujaca (np. anulowana) albo termin jest już zajęty.
+            body:
+              application/problem+json:
+                type: Blad
+                examples:
+                  termin-zajety:
+                    value:
+                      type: https://api.psychsearch.example/bledy/termin-niedostepny
+                      title: Termin niedostępny
+                      status: 409
+                      detail: Termin został już zarezerwowany przez inną konsultację.
+                      instance: /api/v1/konsultacje/a1b2c3d4-5555-4aaa-8bbb-000000000005/akceptacja
+                  prosba-anulowana:
+                    value:
+                      type: https://api.psychsearch.example/bledy/niedozwolony-status
+                      title: Niedozwolony status konsultacji
+                      status: 409
+                      detail: Prośba ma status anulowana i nie może zostać zaakceptowana.
+                      instance: /api/v1/konsultacje/a1b2c3d4-5555-4aaa-8bbb-000000000005/akceptacja
     /odrzucenie:
       post:
         description: Odrzucenie prośby (psycholog adresat). Powiadamia użytkownika.
@@ -797,8 +1328,34 @@ traits:
             body:
               application/json:
                 type: Konsultacja
+                example:
+                  id: a1b2c3d4-5555-4aaa-8bbb-000000000005
+                  utworzona: "2026-11-16T12:30:00"
+                  status: odrzucona
+                  uzytkownik:
+                    id: a1b2c3d4-1111-4aaa-8bbb-000000000001
+                    imie: Anna
+                    nazwisko: Nowak
+                  psycholog:
+                    id: a1b2c3d4-2222-4aaa-8bbb-000000000002
+                    imie: Jan
+                    nazwisko: Kowalski
+                  termin:
+                    id: a1b2c3d4-4444-4aaa-8bbb-000000000004
+                    start: "2026-11-20T14:00:00"
+                    koniec: "2026-11-20T15:00:00"
+                    status: wolny
           409:
             description: Prośba nie ma statusu oczekujaca.
+            body:
+              application/problem+json:
+                type: Blad
+                example:
+                  type: https://api.psychsearch.example/bledy/niedozwolony-status
+                  title: Niedozwolony status konsultacji
+                  status: 409
+                  detail: Prośba ma status zaakceptowana i nie może zostać odrzucona.
+                  instance: /api/v1/konsultacje/a1b2c3d4-5555-4aaa-8bbb-000000000005/odrzucenie
     /anulowanie:
       post:
         description: Anulowanie prośby lub wizyty (użytkownik właściciel). Dla zaakceptowanej wizyty obowiązuje konfigurowalny limit czasu, termin jest zwalniany, a psycholog powiadamiany.
@@ -809,8 +1366,43 @@ traits:
             body:
               application/json:
                 type: Konsultacja
+                example:
+                  id: a1b2c3d4-5555-4aaa-8bbb-000000000005
+                  utworzona: "2026-11-16T12:30:00"
+                  status: anulowana
+                  uzytkownik:
+                    id: a1b2c3d4-1111-4aaa-8bbb-000000000001
+                    imie: Anna
+                    nazwisko: Nowak
+                  psycholog:
+                    id: a1b2c3d4-2222-4aaa-8bbb-000000000002
+                    imie: Jan
+                    nazwisko: Kowalski
+                  termin:
+                    id: a1b2c3d4-4444-4aaa-8bbb-000000000004
+                    start: "2026-11-20T14:00:00"
+                    koniec: "2026-11-20T15:00:00"
+                    status: wolny
           409:
             description: Status nie pozwala na anulowanie albo przekroczono dozwolony czas anulowania.
+            body:
+              application/problem+json:
+                type: Blad
+                examples:
+                  przekroczony-limit:
+                    value:
+                      type: https://api.psychsearch.example/bledy/przekroczony-limit-anulowania
+                      title: Przekroczony czas anulowania
+                      status: 409
+                      detail: Wizyty nie można już anulować, minął dozwolony czas.
+                      instance: /api/v1/konsultacje/a1b2c3d4-5555-4aaa-8bbb-000000000005/anulowanie
+                  niedozwolony-status:
+                    value:
+                      type: https://api.psychsearch.example/bledy/niedozwolony-status
+                      title: Niedozwolony status konsultacji
+                      status: 409
+                      detail: Konsultacja ma status odrzucona i nie może zostać anulowana.
+                      instance: /api/v1/konsultacje/a1b2c3d4-5555-4aaa-8bbb-000000000005/anulowanie
 
 /powiadomienia:
   get:
@@ -821,11 +1413,23 @@ traits:
       przeczytane:
         type: boolean
         required: false
+        example: false
     responses:
       200:
         body:
           application/json:
             type: PowiadomieniaStrona
+            example:
+              numer: 0
+              rozmiar: 20
+              lacznieElementow: 1
+              lacznieStron: 1
+              elementy:
+                - id: a1b2c3d4-6666-4aaa-8bbb-000000000006
+                  tresc: Twoja prośba o konsultację została zaakceptowana.
+                  dataWyslania: "2026-11-16T13:05:00"
+                  przeczytane: false
+                  konsultacjaId: a1b2c3d4-5555-4aaa-8bbb-000000000005
   /{powiadomienieId}/przeczytane:
     uriParameters:
       powiadomienieId: UUID
@@ -838,6 +1442,12 @@ traits:
           body:
             application/json:
               type: Powiadomienie
+              example:
+                id: a1b2c3d4-6666-4aaa-8bbb-000000000006
+                tresc: Twoja prośba o konsultację została zaakceptowana.
+                dataWyslania: "2026-11-16T13:05:00"
+                przeczytane: true
+                konsultacjaId: a1b2c3d4-5555-4aaa-8bbb-000000000005
 
 /problemy:
   get:
@@ -848,11 +1458,23 @@ traits:
       rozwiazany:
         type: boolean
         required: false
+        example: false
     responses:
       200:
         body:
           application/json:
             type: ProblemyStrona
+            example:
+              numer: 0
+              rozmiar: 20
+              lacznieElementow: 1
+              lacznieStron: 1
+              elementy:
+                - id: a1b2c3d4-7777-4aaa-8bbb-000000000007
+                  opis: Błąd zapisu konsultacji do bazy danych.
+                  zrodlo: SerwisRezerwacji
+                  wykryty: "2026-11-16T12:31:10"
+                  rozwiazany: false
   /{problemId}:
     uriParameters:
       problemId: UUID
@@ -865,6 +1487,12 @@ traits:
           body:
             application/json:
               type: ProblemTechniczny
+              example:
+                id: a1b2c3d4-7777-4aaa-8bbb-000000000007
+                opis: Błąd zapisu konsultacji do bazy danych.
+                zrodlo: SerwisRezerwacji
+                wykryty: "2026-11-16T12:31:10"
+                rozwiazany: false
     /rozwiazanie:
       post:
         description: Oznaczenie problemu jako rozwiązanego wraz z opisem rozwiązania (administrator).
@@ -873,10 +1501,28 @@ traits:
         body:
           application/json:
             type: RozwiazanieProblemu
+            example:
+              opis: Przywrócono połączenie z bazą danych, zwiększono limit połączeń w puli.
         responses:
           200:
             body:
               application/json:
                 type: ProblemTechniczny
+                example:
+                  id: a1b2c3d4-7777-4aaa-8bbb-000000000007
+                  opis: Błąd zapisu konsultacji do bazy danych.
+                  zrodlo: SerwisRezerwacji
+                  wykryty: "2026-11-16T12:31:10"
+                  rozwiazany: true
+                  opisRozwiazania: Przywrócono połączenie z bazą danych, zwiększono limit połączeń w puli.
           409:
             description: Problem jest już rozwiązany.
+            body:
+              application/problem+json:
+                type: Blad
+                example:
+                  type: https://api.psychsearch.example/bledy/konflikt
+                  title: Konflikt
+                  status: 409
+                  detail: Problem został już oznaczony jako rozwiązany.
+                  instance: /api/v1/problemy/a1b2c3d4-7777-4aaa-8bbb-000000000007/rozwiazanie
